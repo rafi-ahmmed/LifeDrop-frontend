@@ -9,9 +9,9 @@ import {
   TriangleAlert,
   UserCheck,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FetchError } from "ofetch";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +35,7 @@ export function LoginForm({
   const [showPassword, setShowPassword] = useState(false);
   const { mutate: Login, isPending: loginPending } = useLogin();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const {
     register,
@@ -79,6 +80,22 @@ export function LoginForm({
         });
       },
     });
+  };
+
+  const errorParam = searchParams.get("error");
+
+  useEffect(() => {
+    if (errorParam) {
+      toast.add({
+        title: "Too Many Attempts",
+        description: "Please wait a few minutes before trying again.",
+        type: "error",
+      });
+    }
+  }, [errorParam]);
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   };
 
   return (
@@ -218,6 +235,7 @@ export function LoginForm({
             variant="outline"
             type="button"
             className="w-full flex items-center justify-center gap-2 border-border hover:bg-accent"
+            onClick={handleGoogleLogin}
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24" aria-label="Google">
               <title>Google</title>
