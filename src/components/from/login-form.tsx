@@ -4,12 +4,13 @@ import {
   Building2,
   Eye,
   EyeClosed,
-  EyeOff,
   LogIn,
   ShieldCheck,
   TriangleAlert,
   UserCheck,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { FetchError } from "ofetch";
 import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -21,14 +22,19 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useLogin } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { type LoginInput, loginZodSchema } from "@/validation";
+import { Spinner } from "../ui/spinner";
+import { toast } from "../ui/toast";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
   const [showPassword, setShowPassword] = useState(false);
+  const { mutate: Login, isPending: loginPending } = useLogin();
+  const router = useRouter();
 
   const {
     register,
@@ -36,11 +42,44 @@ export function LoginForm({
     watch,
     formState: { errors },
   } = useForm<LoginInput>({
+    defaultValues: {
+      email: "admin@gmail.com",
+      password: "@admin12345",
+    },
     resolver: zodResolver(loginZodSchema),
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<LoginInput> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<LoginInput> = (data) => {
+    const loginData = {
+      email: data.email,
+      password: data.password,
+    };
+
+    Login(loginData, {
+      onSuccess: (res) => {
+        console.log(res);
+        router.push("/");
+        toast.add({
+          title: "Login Successful",
+          description: "You are now logged in",
+          type: "success",
+        });
+      },
+      onError: (err) => {
+        console.log(err);
+        const message =
+          err instanceof FetchError
+            ? err.data?.message || err.message
+            : "Something went wrong";
+        toast.add({
+          title: message,
+          description: "Please try again",
+          type: "error",
+        });
+      },
+    });
+  };
 
   return (
     <form
@@ -89,13 +128,12 @@ export function LoginForm({
     </a> */}
           </div>
 
-         
           <div className="relative">
             <Input
               {...register("password", { required: true })}
               id="password"
               type={showPassword ? "text" : "password"}
-              className="pr-10" 
+              className="pr-10"
               required
             />
             <button
@@ -119,8 +157,15 @@ export function LoginForm({
           <Button
             type="submit"
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-sm"
+            disabled={loginPending}
           >
-            <LogIn className="w-4 h-4 mr-2" /> Login
+            {loginPending ? (
+              <>
+                <Spinner /> Loading...
+              </>
+            ) : (
+              <> Login</>
+            )}
           </Button>
         </Field>
 

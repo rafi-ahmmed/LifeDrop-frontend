@@ -1,6 +1,7 @@
-import { Droplet, HeartHandshake, ShieldCheck } from "lucide-react";
+import { HeartHandshake, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { LoginForm } from "@/components/from/login-from";
+import Logo from "@/assets/svg/Logo";
+import { LoginForm } from "@/components/from/login-form";
 
 export default function LoginPage() {
   return (
@@ -8,17 +9,7 @@ export default function LoginPage() {
       {/* Left Column: Form & Brand Logo */}
       <div className="flex flex-col justify-between p-6 sm:p-10 md:p-12">
         {/* Brand Header */}
-        <div className="flex justify-start">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary transition-transform group-hover:scale-105">
-              <Droplet className="w-5 h-5 fill-primary" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-foreground">
-              Life<span className="text-primary">Drop</span>
-            </span>
-          </Link>
-        </div>
-
+        <Logo />
         {/* Center: Login Form Container (Perfectly Centered) */}
         <div className="flex-1 flex items-center justify-center my-auto py-6">
           <div className="w-full max-w-sm">
