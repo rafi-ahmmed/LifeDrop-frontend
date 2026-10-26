@@ -3,17 +3,25 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, TriangleAlert } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FetchError } from "ofetch";
 import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/components/ui/toast";
+import { useRegisterPatient } from "@/hooks";
 import type { patientRegistrationPayload } from "@/types";
 import { patientRegistrationZodSchema } from "@/validation";
 
 export function PatientRegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+
+  const { mutate: registerPatient, isPending: registerPatientPending } =
+    useRegisterPatient();
 
   const {
     register,
@@ -21,19 +29,67 @@ export function PatientRegisterForm() {
     formState: { errors, isSubmitting },
   } = useForm<patientRegistrationPayload>({
     resolver: zodResolver(patientRegistrationZodSchema),
-    mode: "onBlur",
+    mode: "onChange",
     defaultValues: {
-      name: "",
+      name: "Rafi Rahman",
       email: "",
-      password: "",
-      phone: "",
-      address: "",
+      password: "@123Aa",
+      phone: "01844566545",
+      address: "Midnapore",
     },
   });
 
   const onSubmit: SubmitHandler<patientRegistrationPayload> = async (data) => {
-    // TODO: Connect your patient registration API.
-    console.log(data);
+    const patientData = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      phone: data.phone,
+      address: data.address,
+    };
+
+    registerPatient(patientData, {
+      onSuccess: (res) => {
+        console.log(res);
+        if (!res.success) {
+          // router.push("/"); TODO: Redirect to OTP page
+
+          toast.add({
+            title: "Server Failure",
+            description: "Please try again",
+            type: "error",
+          });
+        }
+
+        toast.add({
+          title: res.message || "Registration Successful",
+          description: "We have sent you an OTP to your email",
+          type: "success",
+        });
+
+        const searchParams = new URLSearchParams({
+          email: data.email,
+        });
+
+        const url = `/register/verify-account?${searchParams.toString()}`;
+
+        console.log("Navigating to:", url);
+
+        router.push(url);
+      },
+      onError: (err) => {
+        console.log(err);
+        const message =
+          err instanceof FetchError
+            ? err.data?.message || err.message
+            : "Something went wrong";
+        toast.add({
+          title: message,
+          description: "Please try again",
+          type: "error",
+        });
+      },
+    });
   };
 
   return (
@@ -145,8 +201,18 @@ export function PatientRegisterForm() {
         </Field>
 
         {/* Submit */}
-        <Button type="submit" className="mt-2 w-full" disabled={isSubmitting}>
-          {isSubmitting ? "Creating account..." : "Register as Patient"}
+        <Button
+          type="submit"
+          className="mt-2 w-full"
+          disabled={registerPatientPending}
+        >
+          {registerPatientPending ? (
+            <>
+              <Spinner /> Loading...
+            </>
+          ) : (
+            "Register as Patient"
+          )}
         </Button>
       </form>
 

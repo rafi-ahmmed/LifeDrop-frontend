@@ -1,5 +1,6 @@
 import { HeartHandshake, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 import Logo from "@/assets/svg/Logo";
 import { LoginForm } from "@/components/from/login-form";
 

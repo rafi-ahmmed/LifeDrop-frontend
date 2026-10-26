@@ -52,7 +52,7 @@ export const donorRegistrationZodSchema = z.object({
   name: z
     .string("Name is required")
     .min(3, "Name must be at least 3 characters")
-    .max(12, "Name must be at most 10 characters"),
+    .max(12, "Name must be at most 12 characters"),
   email: z.email("Not a valid email"),
   password: z
     .string("Password is required")
@@ -81,9 +81,9 @@ export const donorRegistrationZodSchema = z.object({
 
   phone: z
     .string("Phone number is required")
-    .trim()
-    .min(11, "Phone number must be at least 11 characters.")
-    .max(15, "Phone number cannot exceed 15 characters."),
+    .refine((phone) => /^(013|014|015|016|017|018)\d{8}$/.test(phone), {
+      message: "Enter a valid Bangladeshi phone number",
+    }),
 
   address: z
     .string("address is not a string or is empty")

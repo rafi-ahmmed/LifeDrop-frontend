@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { FetchError } from "ofetch";
 import { useState } from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import type z from "zod";
@@ -16,6 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/components/ui/toast";
+import { useRegisterDonor } from "@/hooks";
 import {
   type donorRegistrationPayload,
   donorRegistrationZodSchema,
@@ -27,6 +31,9 @@ export function DonorRegisterForm() {
   type DonorFormInput = z.input<typeof donorRegistrationZodSchema>;
   type DonorFormOutput = z.output<typeof donorRegistrationZodSchema>;
 
+  const { mutate: registerDonor, isPending: registerDonorPending } =
+    useRegisterDonor();
+
   const {
     register,
     handleSubmit,
@@ -34,14 +41,14 @@ export function DonorRegisterForm() {
     formState: { errors, isSubmitting },
   } = useForm<DonorFormInput, unknown, DonorFormOutput>({
     resolver: zodResolver(donorRegistrationZodSchema),
-    mode: "onBlur",
+    mode: "onChange",
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
+      name: "Rafi Rahman",
+      email: "rafi.dev920@gmail.com",
+      password: "@123Aa",
       bloodGroup: undefined,
       gender: undefined,
-      phone: "",
+      phone: "01844566545",
       address: "",
       district: "",
       dateOfBirth: "",
@@ -52,6 +59,51 @@ export function DonorRegisterForm() {
     // Validation-এর পরে dateOfBirth হবে Date object
     console.log(data);
     console.log(data.dateOfBirth);
+
+    const donorData = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      bloodGroup: data.bloodGroup,
+      gender: data.gender,
+      phone: data.phone,
+      address: data.address,
+      district: data.district,
+      dateOfBirth: data.dateOfBirth,
+    };
+
+    registerDonor(donorData, {
+      onSuccess: (res) => {
+        console.log(res);
+        // router.push("/"); TODO: Redirect to OTP page
+
+        if (!res.success) {
+          toast.add({
+            title: "Server Failure",
+            description: "Please try again",
+            type: "error",
+          });
+        }
+
+        toast.add({
+          title: res.message || "Registration Successful",
+          description: "We have sent you an OTP to your email",
+          type: "success",
+        });
+      },
+      onError: (err) => {
+        console.log(err);
+        const message =
+          err instanceof FetchError
+            ? err.data?.message || err.message
+            : "Something went wrong";
+        toast.add({
+          title: message,
+          description: "Please try again",
+          type: "error",
+        });
+      },
+    });
   };
 
   return (
@@ -124,7 +176,10 @@ export function DonorRegisterForm() {
               name="bloodGroup"
               control={control}
               render={({ field }) => (
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value ?? ""}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Blood" />
                   </SelectTrigger>
@@ -155,7 +210,10 @@ export function DonorRegisterForm() {
               name="gender"
               control={control}
               render={({ field }) => (
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value ?? ""}
+                >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select Gender" />
                   </SelectTrigger>
@@ -231,8 +289,19 @@ export function DonorRegisterForm() {
         </div>
 
         {/* Submit Button */}
-        <Button type="submit" disabled={isSubmitting} className="w-full mt-2">
-          {isSubmitting ? "Registering..." : "Register as Donor"}
+        <Button
+          type="submit"
+          disabled={registerDonorPending}
+          className="w-full mt-2"
+        >
+          {registerDonorPending ? (
+            <>
+              <Spinner /> Loading...
+            </>
+          ) : (
+            "Register as Donor"
+          )}
+          
         </Button>
       </form>
 

@@ -1,9 +1,27 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getMe, logOut, userLogin } from "@/api";
+import {
+  DonorRegister,
+  getMe,
+  logOut,
+  patientRegister,
+  userLogin,
+} from "@/api";
 
 export const useLogin = () => {
   return useMutation({
     mutationFn: userLogin,
+  });
+};
+
+export const useRegisterPatient = () => {
+  return useMutation({
+    mutationFn: patientRegister,
+  });
+};
+
+export const useRegisterDonor = () => {
+  return useMutation({
+    mutationFn: DonorRegister,
   });
 };
 
@@ -20,4 +38,3 @@ export const useGetMe = () => {
     retry: false,
   });
 };
-

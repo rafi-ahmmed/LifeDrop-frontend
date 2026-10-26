@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FetchError } from "ofetch";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -211,7 +211,9 @@ export function LoginForm({
           </button>
         </div>
         {/* Google Login Button */}
-        <GoogleLoginBtn />
+        <Suspense fallback={<div>Loading...</div>}>
+          <GoogleLoginBtn />
+        </Suspense>
         <FieldDescription className="text-center pt-2 text-xs">
           Don&apos;t have an account?{" "}
           <a
