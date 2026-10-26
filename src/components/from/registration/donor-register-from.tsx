@@ -20,10 +20,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/toast";
 import { useRegisterDonor } from "@/hooks";
-import {
-  type donorRegistrationPayload,
-  donorRegistrationZodSchema,
-} from "@/validation";
+import { donorRegistrationZodSchema } from "@/validation";
 
 export function DonorRegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -56,9 +53,7 @@ export function DonorRegisterForm() {
   });
 
   const onSubmit: SubmitHandler<DonorFormOutput> = async (data) => {
-    // Validation-এর পরে dateOfBirth হবে Date object
-    console.log(data);
-    console.log(data.dateOfBirth);
+
 
     const donorData = {
       name: data.name,
@@ -301,7 +296,6 @@ export function DonorRegisterForm() {
           ) : (
             "Register as Donor"
           )}
-          
         </Button>
       </form>
 

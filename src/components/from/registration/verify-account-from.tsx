@@ -1,100 +1,165 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import type React from "react";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FetchError } from "ofetch";
+import { useEffect } from "react";
+import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Field, FieldLabel } from "@/components/ui/field";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "@/components/ui/toast";
+import { useVerifyEmail } from "@/hooks";
+import type { verifyEmailPayload } from "@/types";
+import { verifyEmailZodSchema } from "@/validation";
 
 const VerifyAccountForm = () => {
-  const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const router = useRouter();
 
+  const { mutate: verifyEmail, isPending: verifyPending } = useVerifyEmail();
 
-  // 1. Single digit input & auto-focus
-  const handleChange = (value: string, index: number) => {
-    if (isNaN(Number(value))) return;
-    const newOtp = [...otp];
-    newOtp[index] = value.slice(-1);
-    setOtp(newOtp);
-
-    if (value && index < 5) {
-      const nextInput = document.getElementById(`otp-input-${index + 1}`);
-      nextInput?.focus();
+  useEffect(() => {
+    if (!email) {
+      router.push("/");
     }
-  };
+  }, [email, router]);
 
-  // 2. Backspace focus transfer
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-input-${index - 1}`);
-      prevInput?.focus();
-    }
-  };
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<verifyEmailPayload>({
+    resolver: zodResolver(verifyEmailZodSchema),
+    defaultValues: {
+      otp: "",
+    },
+    mode: "onChange",
+  });
 
-  // 3. Paste event for full code auto-fill (Ctrl + V)
-  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pastedData = e.clipboardData.getData("text").trim();
+  const onSubmit: SubmitHandler<verifyEmailPayload> = async (data) => {
+    const verifyData = {
+      email: email as string,
+      otp: data.otp,
+    };
 
-    if (!/^\d+$/.test(pastedData)) return;
+    verifyEmail(verifyData, {
+      onSuccess: (res) => {
+        console.log(res);
+        if (!res.success) {
+          toast.add({
+            title: "Server Failure",
+            description: "Please try again",
+            type: "error",
+          });
+          return;
+        }
 
-    const digits = pastedData.slice(0, 6).split("");
-    const newOtp = [...otp];
+        toast.add({
+          title: res.message || "Verification Successful",
+          description: "You can now login",
+          type: "success",
+        });
 
-    digits.forEach((digit, index) => {
-      if (index < 6) {
-        newOtp[index] = digit;
-      }
+        router.push("/");
+      },
+      onError: (err) => {
+        console.log(err);
+        const message =
+          err instanceof FetchError
+            ? err.data?.message || err.message
+            : "Something went wrong";
+        toast.add({
+          title: message,
+          description: "Please try again",
+          type: "error",
+        });
+      },
     });
-
-    setOtp(newOtp);
-
-    const targetIndex = Math.min(digits.length, 5);
-    const targetInput = document.getElementById(`otp-input-${targetIndex}`);
-    targetInput?.focus();
   };
+
+  if (!email) {
+    return null;
+  }
 
   return (
-    <form className="space-y-5">
-      <div className="space-y-2">
-        <Label
-          htmlFor="otp-input-0"
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <Field className="w-full space-y-2">
+        <FieldLabel
+          htmlFor="otp"
           className="text-xs font-medium text-foreground"
         >
-          Verification Code (OTP) {email}
-        </Label>
-        {/* 6 Digit Input Grid */}
-        <div className="grid grid-cols-6 gap-2">
-          {otp.map((digit, index) => (
-            <Input
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              key={index}
-              id={`otp-input-${index}`}
-              type="text"
-              inputMode="numeric"
-              maxLength={1}
-              value={digit}
-              onChange={(e) => handleChange(e.target.value, index)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              onPaste={handlePaste}
-              className="h-12 text-center text-lg font-bold"
-            />
-          ))}
-        </div>
-      </div>
+          Verification Code (OTP){" "}
+          {email && <span className="text-muted-foreground">({email})</span>}
+        </FieldLabel>
+
+        <Controller
+          name="otp"
+          control={control}
+          render={({ field }) => (
+            <InputOTP
+              id="otp"
+              maxLength={6}
+              pattern={REGEXP_ONLY_DIGITS}
+              value={field.value}
+              onChange={field.onChange}
+              className="w-full"
+            >
+              <InputOTPGroup className="grid grid-cols-6 gap-2 w-full justify-between">
+                <InputOTPSlot
+                  index={0}
+                  className="h-12 w-full text-center text-lg font-bold rounded-md border"
+                />
+                <InputOTPSlot
+                  index={1}
+                  className="h-12 w-full text-center text-lg font-bold rounded-md border"
+                />
+                <InputOTPSlot
+                  index={2}
+                  className="h-12 w-full text-center text-lg font-bold rounded-md border"
+                />
+                <InputOTPSlot
+                  index={3}
+                  className="h-12 w-full text-center text-lg font-bold rounded-md border"
+                />
+                <InputOTPSlot
+                  index={4}
+                  className="h-12 w-full text-center text-lg font-bold rounded-md border"
+                />
+                <InputOTPSlot
+                  index={5}
+                  className="h-12 w-full text-center text-lg font-bold rounded-md border"
+                />
+              </InputOTPGroup>
+            </InputOTP>
+          )}
+        />
+
+        {errors.otp && (
+          <p className="text-xs text-destructive mt-1">{errors.otp.message}</p>
+        )}
+      </Field>
 
       {/* Submit Button */}
       <Button
-        type="button"
+        type="submit"
+        disabled={isSubmitting}
         className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-sm"
       >
-        Verify & Continue
+        {verifyPending ? (
+          <>
+            <Spinner /> Verifying...
+          </>
+        ) : (
+          "Verify & Continue"
+        )}
       </Button>
     </form>
   );

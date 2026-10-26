@@ -5,6 +5,7 @@ import {
   logOut,
   patientRegister,
   userLogin,
+  verifyEmail,
 } from "@/api";
 
 export const useLogin = () => {
@@ -22,6 +23,12 @@ export const useRegisterPatient = () => {
 export const useRegisterDonor = () => {
   return useMutation({
     mutationFn: DonorRegister,
+  });
+};
+
+export const useVerifyEmail = () => {
+  return useMutation({
+    mutationFn: verifyEmail,
   });
 };
 

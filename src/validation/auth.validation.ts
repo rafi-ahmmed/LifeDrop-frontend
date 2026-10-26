@@ -114,6 +114,6 @@ export const donorRegistrationZodSchema = z.object({
     ),
 });
 
-export type donorRegistrationPayload = z.infer<
-  typeof donorRegistrationZodSchema
->;
+export const verifyEmailZodSchema = z.object({
+  otp: z.string("OTP is required").length(6, "OTP must be 6 digits"),
+});
