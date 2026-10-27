@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { FetchError } from "ofetch";
 import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
+import GoogleLoginBtn from "@/components/google-login/GoogleLoginBtn";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -93,8 +94,8 @@ export function PatientRegisterForm() {
   };
 
   return (
-    <div className="w-full space-y-5">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <div className="w-full space-y-4 ">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 ">
         {/* Full Name */}
         <Field>
           <FieldLabel htmlFor="patient-name">Full Name</FieldLabel>
@@ -203,7 +204,7 @@ export function PatientRegisterForm() {
         {/* Submit */}
         <Button
           type="submit"
-          className="mt-2 w-full"
+          className="mt-3 w-full"
           disabled={registerPatientPending}
         >
           {registerPatientPending ? (
@@ -215,6 +216,8 @@ export function PatientRegisterForm() {
           )}
         </Button>
       </form>
+
+      <GoogleLoginBtn titleText="Register with google" />
 
       {/* Login Link */}
       <div className="pt-1 text-center text-xs text-muted-foreground">

@@ -114,6 +114,31 @@ export const donorRegistrationZodSchema = z.object({
     ),
 });
 
+
+import { z } from "zod";
+
+export const hospitalRegistrationZodSchema = z.object({
+  name: z.string().min(2, "Hospital name must be at least 2 characters"),
+  officialEmail: z.string("Email is required").email("Please enter a valid email address"),
+  password: z.string("Password is required").min(6, "Password must be at least 6 characters"),
+  type: z.string().min(1, "Please select a hospital type"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
+  registrationNumber: z.string().min(1, "Registration number is required"),
+  address: z.string().min(5, "Address must be at least 5 characters"),
+  documentUrl: z
+    .string()
+    .url("Please enter a valid document URL")
+    .optional()
+    .or(z.literal("")),
+  additionalFiles: z.string().optional(), // যদি JSON string বা comma-separated string হিসেবে নেন
+});
+
+export type hospitalRegistrationPayload = z.infer<
+  typeof hospitalRegistrationZodSchema
+>;
+
+
+
 export const verifyEmailZodSchema = z.object({
   otp: z.string("OTP is required").length(6, "OTP must be 6 digits"),
 });

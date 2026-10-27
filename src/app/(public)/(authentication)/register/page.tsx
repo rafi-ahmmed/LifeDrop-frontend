@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Logo from "@/assets/svg/Logo";
 import { DonorRegisterForm } from "@/components/from/registration/donor-register-from";
+import { HospitalRegisterForm } from "@/components/from/registration/hospital-registration-form";
 import { PatientRegisterForm } from "@/components/from/registration/patient-registration-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -22,7 +23,7 @@ export default function SignupPage() {
 
         {/* Center Container */}
         <div className="flex-1 flex items-start justify-center pt-8 pb-6">
-          <div className="w-full max-w-sm space-y-6">
+          <div className="w-full max-w-125 space-y-6">
             {/* Header Title & Subtitle */}
             <div className="space-y-1.5 text-center sm:text-left">
               <h1 className="text-2xl font-bold tracking-tight text-foreground">
@@ -34,7 +35,10 @@ export default function SignupPage() {
             </div>
 
             {/* Shadcn Tabs with TabsContent */}
-            <Tabs defaultValue="patient" className="w-full">
+            <Tabs
+              defaultValue="patient"
+              className="w-full px-0 md:px-0 lg:px-4"
+            >
               <TabsList className="grid w-full grid-cols-3 h-10 mb-4">
                 <TabsTrigger
                   value="patient"
@@ -72,9 +76,7 @@ export default function SignupPage() {
               {/* Hospital Form Tab */}
               <TabsContent value="hospital" className="mt-2.5 outline-none">
                 {/* <HospitalRegisterForm /> */}
-                <p className="text-xs text-muted-foreground text-center py-4">
-                  [ Hospital Register Form ]
-                </p>
+                <HospitalRegisterForm />
               </TabsContent>
             </Tabs>
           </div>

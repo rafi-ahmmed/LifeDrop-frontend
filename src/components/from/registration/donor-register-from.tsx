@@ -53,8 +53,6 @@ export function DonorRegisterForm() {
   });
 
   const onSubmit: SubmitHandler<DonorFormOutput> = async (data) => {
-
-
     const donorData = {
       name: data.name,
       email: data.email,
@@ -103,7 +101,7 @@ export function DonorRegisterForm() {
 
   return (
     <div className="w-full space-y-3">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Full Name */}
         <div className="space-y-2">
           <Label htmlFor="donor-name">Full Name</Label>
@@ -159,6 +157,20 @@ export function DonorRegisterForm() {
             <p className="text-xs text-destructive">
               {errors.password.message}
             </p>
+          )}
+        </div>
+
+        {/* Phone */}
+        <div className="space-y-2">
+          <Label htmlFor="donor-phone">Phone Number</Label>
+          <Input
+            id="donor-phone"
+            type="tel"
+            placeholder="01********"
+            {...register("phone")}
+          />
+          {errors.phone && (
+            <p className="text-xs text-destructive">{errors.phone.message}</p>
           )}
         </div>
 
@@ -228,18 +240,33 @@ export function DonorRegisterForm() {
           </div>
         </div>
 
-        {/* Phone */}
-        <div className="space-y-2">
-          <Label htmlFor="donor-phone">Phone Number</Label>
-          <Input
-            id="donor-phone"
-            type="tel"
-            placeholder="01********"
-            {...register("phone")}
-          />
-          {errors.phone && (
-            <p className="text-xs text-destructive">{errors.phone.message}</p>
-          )}
+        <div className="grid grid-cols-2 gap-3">
+          {/* District */}
+          <div className="space-y-2">
+            <Label htmlFor="donor-district">District</Label>
+            <Input
+              id="donor-district"
+              type="text"
+              placeholder="Enter your district"
+              {...register("district")}
+            />
+            {errors.district && (
+              <p className="text-xs text-destructive">
+                {errors.district.message}
+              </p>
+            )}
+          </div>
+
+          {/* Date of Birth */}
+          <div className="space-y-2">
+            <Label htmlFor="donor-dob">Date of Birth</Label>
+            <Input id="donor-dob" type="date" {...register("dateOfBirth")} />
+            {errors.dateOfBirth && (
+              <p className="text-xs text-destructive">
+                {errors.dateOfBirth.message}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Address */}
@@ -253,33 +280,6 @@ export function DonorRegisterForm() {
           />
           {errors.address && (
             <p className="text-xs text-destructive">{errors.address.message}</p>
-          )}
-        </div>
-
-        {/* District */}
-        <div className="space-y-2">
-          <Label htmlFor="donor-district">District</Label>
-          <Input
-            id="donor-district"
-            type="text"
-            placeholder="Enter your district"
-            {...register("district")}
-          />
-          {errors.district && (
-            <p className="text-xs text-destructive">
-              {errors.district.message}
-            </p>
-          )}
-        </div>
-
-        {/* Date of Birth */}
-        <div className="space-y-2">
-          <Label htmlFor="donor-dob">Date of Birth</Label>
-          <Input id="donor-dob" type="date" {...register("dateOfBirth")} />
-          {errors.dateOfBirth && (
-            <p className="text-xs text-destructive">
-              {errors.dateOfBirth.message}
-            </p>
           )}
         </div>
 
