@@ -114,30 +114,44 @@ export const donorRegistrationZodSchema = z.object({
     ),
 });
 
+const MAX_FILE_SIZE = 7 * 1024 * 1024; // 5 MB
+const ACCEPTED_FILE_TYPES = ["image/jpeg", "image/png", "application/pdf"];
 
-import { z } from "zod";
+const fileValidation = (fieldName: string) =>
+  z.preprocess(
+    (value) => {
+      if (value instanceof FileList) {
+        return value.length > 0 ? value[0] : undefined;
+      }
 
-export const hospitalRegistrationZodSchema = z.object({
+      return value;
+    },
+    z
+      .instanceof(File, {
+        message: `Please upload ${fieldName}`,
+      })
+      .refine(
+        (file) => file.size <= MAX_FILE_SIZE,
+        `${fieldName} must be less than 7 MB`,
+      )
+      .refine(
+        (file) => ACCEPTED_FILE_TYPES.includes(file.type),
+        `${fieldName} must be a PDF, PNG, or JPG file`,
+      )
+      .optional(),
+  );
+
+export const hospitalRegistrationInputZodSchema = z.object({
   name: z.string().min(2, "Hospital name must be at least 2 characters"),
-  officialEmail: z.string("Email is required").email("Please enter a valid email address"),
-  password: z.string("Password is required").min(6, "Password must be at least 6 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  regNum: z.string().min(1, "Registration number is required"),
   type: z.string().min(1, "Please select a hospital type"),
   phone: z.string().min(10, "Please enter a valid phone number"),
-  registrationNumber: z.string().min(1, "Registration number is required"),
   address: z.string().min(5, "Address must be at least 5 characters"),
-  documentUrl: z
-    .string()
-    .url("Please enter a valid document URL")
-    .optional()
-    .or(z.literal("")),
-  additionalFiles: z.string().optional(), // যদি JSON string বা comma-separated string হিসেবে নেন
+  license: fileValidation("License"),
+  additionalDoc: fileValidation("Additional Document").optional(),
 });
-
-export type hospitalRegistrationPayload = z.infer<
-  typeof hospitalRegistrationZodSchema
->;
-
-
 
 export const verifyEmailZodSchema = z.object({
   otp: z.string("OTP is required").length(6, "OTP must be 6 digits"),

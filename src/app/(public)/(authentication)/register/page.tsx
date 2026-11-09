@@ -8,7 +8,7 @@ import {
   User,
 } from "lucide-react";
 import Logo from "@/assets/svg/Logo";
-import { DonorRegisterForm } from "@/components/from/registration/donor-register-from";
+import { DonorRegisterForm } from "@/components/from/registration/donor-register-form";
 import { HospitalRegisterForm } from "@/components/from/registration/hospital-registration-form";
 import { PatientRegisterForm } from "@/components/from/registration/patient-registration-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -37,7 +37,7 @@ export default function SignupPage() {
             {/* Shadcn Tabs with TabsContent */}
             <Tabs
               defaultValue="patient"
-              className="w-full px-0 md:px-0 lg:px-4"
+              className="w-full px-0 md:px-0 lg:px-5"
             >
               <TabsList className="grid w-full grid-cols-3 h-10 mb-4">
                 <TabsTrigger

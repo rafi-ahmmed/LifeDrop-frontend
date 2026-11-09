@@ -1,7 +1,7 @@
 import type z from "zod";
 import type {
   donorRegistrationZodSchema,
-  hospitalRegistrationZodSchema,
+  hospitalRegistrationInputZodSchema,
   loginZodSchema,
   patientRegistrationZodSchema,
   verifyEmailZodSchema,
@@ -24,6 +24,6 @@ export interface verifyEmailPayloadForApi {
   otp: string;
 }
 
-export type hospitalRegistrationPayload = z.infer<
-  typeof hospitalRegistrationZodSchema
+export type hospitalRegistrationInputPayload = z.infer<
+  typeof hospitalRegistrationInputZodSchema
 >;
