@@ -23,7 +23,7 @@ export default function Header() {
   ];
 
   const { data: user, isLoading } = useGetMe();
-  console.log(user);
+  console.log("User from navbar==", user);
   const { mutate: logout } = useLogout();
   const queryClient = useQueryClient();
 

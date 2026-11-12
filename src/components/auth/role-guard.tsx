@@ -26,11 +26,12 @@ const RoleGuard = ({ children, role }: IProps) => {
     if (isError || !data) {
       router.replace("/login");
     }
-  });
+  }, [isPending, isError, data, router]);
 
   if (isPending) return <AuthLoading />;
 
   if (isError || !data) {
+    return null;
     // TODO: a loading state is already handled above, so we can return null here
   }
 
