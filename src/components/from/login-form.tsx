@@ -23,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks";
 import { cn } from "@/lib/utils";
-import type { LoginInput } from "@/types";
+import type { LoginInput, QuickLoginRole } from "@/types";
 import { loginZodSchema } from "@/validation";
 import GoogleLoginBtn from "../google-login/GoogleLoginBtn";
 import { Spinner } from "../ui/spinner";
@@ -44,8 +44,8 @@ export function LoginForm({
     formState: { errors },
   } = useForm<LoginInput>({
     defaultValues: {
-      email: "admin@gmail.com",
-      password: "@admin12345",
+      email: "",
+      password: "",
     },
     resolver: zodResolver(loginZodSchema),
     mode: "onChange",
@@ -56,6 +56,63 @@ export function LoginForm({
       email: data.email,
       password: data.password,
     };
+
+    Login(loginData, {
+      onSuccess: (res) => {
+        console.log(res);
+        router.push("/");
+        toast.add({
+          title: "Login Successful",
+          description: "You are now logged in",
+          type: "success",
+        });
+      },
+      onError: (err) => {
+        console.log(err);
+        const message =
+          err instanceof FetchError
+            ? err.data?.message || err.message
+            : "Something went wrong";
+        toast.add({
+          title: message,
+          description: "Please try again",
+          type: "error",
+        });
+      },
+    });
+  };
+
+  const quickDemoLogin = (role: QuickLoginRole) => {
+    let loginData: LoginInput;
+
+    const patientLoginData: LoginInput = {
+      email: "rafi220330@gmail.com",
+      password: "@123Aa",
+    };
+
+    const donorLoginData: LoginInput = {
+      email: "riad.donor@example.com",
+      password: "@123Aa",
+    };
+
+    const adminLoginData: LoginInput = {
+      email: "admin@gmail.com",
+      password: "@admin12345",
+    };
+
+    switch (role) {
+      case "ADMIN":
+        loginData = adminLoginData;
+        break;
+      case "PATIENT":
+        loginData = patientLoginData;
+        break;
+      case "DONOR":
+        loginData = donorLoginData;
+        break;
+      default:
+        throw new Error("Invalid role for quick demo login");
+    }
 
     Login(loginData, {
       onSuccess: (res) => {
@@ -177,33 +234,38 @@ export function LoginForm({
           {/* Admin Demo */}
           <button
             type="button"
+            disabled={loginPending}
             className="flex flex-col items-center justify-center p-2.5 rounded-lg border border-border bg-card hover:bg-accent/50 hover:border-primary/50 transition-all text-center group"
             onClick={() => {
-              // Handle admin demo login fill logic here if needed
+              quickDemoLogin("ADMIN");
             }}
           >
             <ShieldCheck className="w-4 h-4 text-primary mb-1 group-hover:scale-110 transition-transform" />
             <span className="text-xs font-semibold text-foreground">Admin</span>
           </button>
 
-          {/* User Demo */}
+          {/* Patient Demo */}
           <button
             type="button"
+            disabled={loginPending}
             className="flex flex-col items-center justify-center p-2.5 rounded-lg border border-border bg-card hover:bg-accent/50 hover:border-primary/50 transition-all text-center group"
             onClick={() => {
-              // Handle user demo login fill logic here if needed
+              quickDemoLogin("PATIENT");
             }}
           >
             <UserCheck className="w-4 h-4 text-primary mb-1 group-hover:scale-110 transition-transform" />
-            <span className="text-xs font-semibold text-foreground">User</span>
+            <span className="text-xs font-semibold text-foreground">
+              Patient
+            </span>
           </button>
 
-          {/* Provider / Hospital Demo */}
+          {/* Donor */}
           <button
             type="button"
+            disabled={loginPending}
             className="flex flex-col items-center justify-center p-2.5 rounded-lg border border-border bg-card hover:bg-accent/50 hover:border-primary/50 transition-all text-center group"
             onClick={() => {
-              // Handle provider demo login fill logic here if needed
+              quickDemoLogin("DONOR");
             }}
           >
             <Building2 className="w-4 h-4 text-primary mb-1 group-hover:scale-110 transition-transform" />

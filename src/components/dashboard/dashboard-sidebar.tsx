@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type * as React from "react";
 import Logo from "@/assets/svg/Logo";
 import {
   Sidebar,
@@ -18,37 +17,6 @@ import {
 import { adminRoutes, donorRoutes, patientRoutes } from "@/routes";
 import type { UserRole } from "@/types";
 import type { SidebarItems } from "@/types/sidebar.type";
-
-const data = {
-  navMain: [
-    {
-      title: "Getting Started",
-      url: "#",
-      items: [
-        { title: "Installation", url: "#" },
-        { title: "Project Structure", url: "#" },
-      ],
-    },
-    {
-      title: "Build Your Application",
-      url: "#",
-      items: [
-        { title: "Routing", url: "#" },
-        { title: "Data Fetching", url: "#", isActive: true },
-        { title: "Rendering", url: "#" },
-        { title: "Caching", url: "#" },
-        { title: "Styling", url: "#" },
-        { title: "Optimizing", url: "#" },
-        { title: "Configuring", url: "#" },
-        { title: "Testing", url: "#" },
-        { title: "Authentication", url: "#" },
-        { title: "Deploying", url: "#" },
-        { title: "Upgrading", url: "#" },
-        { title: "Examples", url: "#" },
-      ],
-    },
-  ],
-};
 
 const sidebarRoutes: Record<UserRole, SidebarItems> = {
   ADMIN: adminRoutes,

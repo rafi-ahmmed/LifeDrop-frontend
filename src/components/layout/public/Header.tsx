@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { toast } from "@/components/ui/toast";
 import { useGetMe, useLogout } from "@/hooks";
+import type { UserRole } from "@/types";
 import { ThemeToggle } from "./Theme-toggle";
 
 export default function Header() {
@@ -22,10 +23,20 @@ export default function Header() {
     { name: "About", href: "/about" },
   ];
 
+  const dashboardRoutes: Record<UserRole, string> = {
+    ADMIN: "admin",
+    SUPER_ADMIN: "admin",
+    HOSPITAL: "hospital",
+    DONOR: "donor",
+    PATIENT: "patient",
+  };
+
   const { data: user, isLoading } = useGetMe();
   console.log("User from navbar==", user);
   const { mutate: logout } = useLogout();
   const queryClient = useQueryClient();
+
+  const role: UserRole = !!user?.data && user.data.role;
 
   const handleLogout = () => {
     logout(undefined, {
@@ -68,6 +79,15 @@ export default function Header() {
                 {route.name}
               </Link>
             ))}
+
+            {role && (
+              <Link
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                href={`${dashboardRoutes[role]}`}
+              >
+                Dashboard
+              </Link>
+            )}
           </nav>
 
           {/* 3. Right: Theme Toggle Icon, Login Button & Mobile Sheet Trigger */}

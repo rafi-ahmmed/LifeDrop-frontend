@@ -7,6 +7,8 @@ import type {
   verifyEmailZodSchema,
 } from "@/validation";
 
+export type QuickLoginRole = "ADMIN" | "DONOR" | "PATIENT";
+
 export type LoginInput = z.infer<typeof loginZodSchema>;
 
 export type patientRegistrationPayload = z.infer<
