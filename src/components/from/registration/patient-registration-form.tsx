@@ -26,6 +26,7 @@ export function PatientRegisterForm() {
 
   const {
     register,
+
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<patientRegistrationPayload>({
