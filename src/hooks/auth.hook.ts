@@ -17,6 +17,7 @@ export const useLogin = () => {
 export const useRegisterPatient = () => {
   return useMutation({
     mutationFn: patientRegister,
+    
   });
 };
 

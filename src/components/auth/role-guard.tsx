@@ -24,21 +24,16 @@ const RoleGuard = ({ children, role }: IProps) => {
   const isAuthorized = !!user && role.includes(user.role);
 
   useEffect(() => {
-    if (isPending) return;
-    if (isError || !data) {
+    if (!isPending && (isError || !data)) {
       router.replace("/login");
     }
   }, [isPending, isError, data, router]);
 
   if (isPending) return <DashboardSkeleton />;
 
-  if (isError || !data) {
-    return <AccessDenied />;
-  }
+  if (isError || !data) return null;
 
-  if (!isAuthorized) {
-    return <ForbiddenAccess />;
-  }
+  if (!isAuthorized) return <ForbiddenAccess />;
 
   return <>{children}</>;
 };

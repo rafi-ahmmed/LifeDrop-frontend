@@ -20,10 +20,7 @@ const AuthGuard = ({ children }: { children: ReactNode }) => {
 
   if (isPending) return <DashboardSkeleton />;
 
-  if (isError || !data) {
-    router.replace("/login");
-    return null;
-  }
+  if (isError || !data) return null;
 
   return <>{children}</>;
 };

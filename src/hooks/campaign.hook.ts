@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { createCampaign, getMyCampaigns } from "@/api";
 
 export const useCreateCampaign = () => {
@@ -9,6 +9,13 @@ export const useCreateCampaign = () => {
 
 export const useGetCampaigns = () => {
   return useQuery({
+    queryKey: ["my-campaigns"],
+    queryFn: getMyCampaigns,
+  });
+};
+
+export const useGetCampaignsSuspense = () => {
+  return useSuspenseQuery({
     queryKey: ["my-campaigns"],
     queryFn: getMyCampaigns,
   });
