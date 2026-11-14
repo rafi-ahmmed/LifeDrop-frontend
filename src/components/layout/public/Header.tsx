@@ -22,6 +22,7 @@ export default function Header() {
   const routes = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
+    { name: "Campaigns", href: "/campaigns" },
   ];
 
   const dashboardRoutes: Record<UserRole, string> = {
@@ -93,6 +94,10 @@ export default function Header() {
                 </Link>
               )
             )}
+            
+
+
+
           </nav>
 
           {/* 3. Right: Theme Toggle Icon, Login Button & Mobile Sheet Trigger */}
@@ -101,7 +106,7 @@ export default function Header() {
             <ThemeToggle />
 
             {isLoading && (
-              <Skeleton className=" items-center justify-center px-9 py-4 text-sm font-medium  text-grey shadow-sm" />
+              <Skeleton className="hidden md:block lg:block items-center justify-center px-9 py-4 text-sm font-medium  text-grey shadow-sm" />
             )}
 
             {/* Desktop Login Button */}
@@ -164,27 +169,30 @@ export default function Header() {
 
                   {/* Footer Action inside Sheet (Login Button) */}
                   <div className="mt-auto px-2 pt-4">
-                    <SheetClose className="w-full">
-                      {!user && !isLoading && (
-                        <Button
-                          nativeButton={false}
-                          render={<Link href="/login" />}
-                          className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium rounded-md bg-gradient-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-sm"
-                        >
-                          Login
-                        </Button>
-                      )}
-                      {user && !isLoading && (
-                        <Button
-                          onClick={handleLogout}
-                          variant="ghost"
-                          className="w-full hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 text-red-500 font-medium text-sm transition-colors"
-                        >
-                          <LogOut className="w-4 h-4" />
-                          <span>Logout</span>
-                        </Button>
-                      )}
-                    </SheetClose>
+                    {!user && !isLoading && (
+                      <SheetClose
+                        render={
+                          <Button
+                            nativeButton={false}
+                            render={<Link href="/login" />}
+                            className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium rounded-md bg-gradient-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-sm"
+                          />
+                        }
+                      >
+                        Login
+                      </SheetClose>
+                    )}
+
+                    {user && !isLoading && (
+                      <Button
+                        onClick={handleLogout}
+                        variant="ghost"
+                        className="w-full inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 text-red-500 font-medium text-sm transition-colors"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Logout</span>
+                      </Button>
+                    )}
                   </div>
                 </div>
               </SheetContent>

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { UploadCloud, X } from "lucide-react";
 import { FetchError } from "ofetch";
 import { useState } from "react";
@@ -10,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateCampaign } from "@/hooks";
+import { useCreateCampaign, useGetCampaigns } from "@/hooks";
 import { formatFileSize } from "@/utils/formate-file-size";
 import { createCampaignZodSchema } from "@/validation";
 import { Spinner } from "../ui/spinner";
@@ -22,6 +23,7 @@ type CreateCampaignPayload = z.output<typeof createCampaignZodSchema>;
 export function CreateCampaignForm() {
   const [prescriptionFile, setPrescriptionFile] = useState<File | null>(null);
   const [medicalReportFiles, setMedicalReportFiles] = useState<File[]>([]);
+  const queryClient = useQueryClient();
   const { mutate: createCampaign, isPending: createCampaignLoading } =
     useCreateCampaign();
 
@@ -62,6 +64,7 @@ export function CreateCampaignForm() {
         }
 
         reset();
+        queryClient.invalidateQueries({ queryKey: ["my-campaigns"] });
 
         toast.add({
           title: res.message || "Campaign Created Successfully",

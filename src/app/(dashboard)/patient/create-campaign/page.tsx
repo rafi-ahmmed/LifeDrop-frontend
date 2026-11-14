@@ -1,4 +1,4 @@
-import { HeartHandshake, ShieldCheck, Sparkles, FileText } from "lucide-react";
+import { FileText, HeartHandshake, ShieldCheck, Sparkles } from "lucide-react";
 import { CreateCampaignForm } from "@/components/from/create-campaign-from";
 
 export default function CreateCampaignPage() {

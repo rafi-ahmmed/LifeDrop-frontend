@@ -5,17 +5,16 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGetCampaignsSuspense } from "@/hooks";
-import type { Campaign } from "@/types/campaign.type";
+import type { TFundCampaign } from "@/types/campaign.type";
 import { CampaignDetailsModal } from "./campaign-details-modal";
 import { CampaignCard } from "./my-campaign-card";
 
 const MyCampaignList = () => {
   const { data: response } = useGetCampaignsSuspense();
-  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(
-    null,
-  );
+  const [selectedCampaign, setSelectedCampaign] =
+    useState<TFundCampaign | null>(null);
 
-  const campaignsList: Campaign[] = Array.isArray(response?.data)
+  const campaignsList: TFundCampaign[] = Array.isArray(response?.data)
     ? response.data
     : (response?.data as any)?.campaigns || [];
 

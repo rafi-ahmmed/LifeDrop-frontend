@@ -1,17 +1,32 @@
+export type FundCampaignStatus =
+  | "PENDING"
+  | "APPROVED"
+  | "REJECTED"
+  | "ACTIVE"
+  | "COMPLETED"
+  | "CANCELLED"
+  | "EXPIRED";
 
-export interface Campaign {
+export type TFundCampaign = {
   id: string;
+  userId: string;
+  patientName: string;
+  hospitalName: string | null;
+  contactNumber: string;
   title: string;
-  goalAmount: number;
-  raisedAmount: number;
-  status:
-    | "PENDING"
-    | "APPROVED"
-    | "REJECTED"
-    | "ACTIVE"
-    | "COMPLETED"
-    | "CANCELLED"
-    | "EXPIRED";
+  description: string;
+  status: FundCampaignStatus;
+  targetAmount: string;
+  collectedAmount: string;
+  deadline: string;
+  medicalDocuments: {
+    url: string;
+    publicId: string;
+    type: string;
+  }[];
+  reviewedBy: string | null;
+  reviewedAt: string | null;
+  rejectedReason: string | null;
   createdAt: string;
-  hospitalName?: string;
-}
+  updatedAt: string;
+};

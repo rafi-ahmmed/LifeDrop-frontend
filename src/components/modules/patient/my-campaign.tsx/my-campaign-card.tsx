@@ -4,11 +4,11 @@ import { Calendar, Eye, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { campaignStatusConfig } from "@/config/campaign-tatus";
-import type { Campaign } from "@/types/campaign.type";
+import type { TFundCampaign } from "@/types/campaign.type";
 import { CampaignDetailsModal } from "./campaign-details-modal";
 
 interface CampaignCardProps {
-  campaign: Campaign;
+  campaign: TFundCampaign;
 }
 
 export function CampaignCard({ campaign }: CampaignCardProps) {
@@ -20,7 +20,9 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
 
   const progress = Math.min(
     Math.round(
-      ((campaign.raisedAmount || 0) / (campaign.goalAmount || 1)) * 100,
+      ((Number(campaign.collectedAmount) || 0) /
+        (Number(campaign.targetAmount) || 1)) *
+        100,
     ),
     100,
   );
@@ -54,13 +56,13 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
             <span className="text-muted-foreground">
               Raised:{" "}
               <strong className="text-foreground">
-                ৳{(campaign.raisedAmount || 0).toLocaleString()}
+                ৳{(campaign.collectedAmount || 0).toLocaleString()}
               </strong>
             </span>
             <span className="text-muted-foreground">
               Goal:{" "}
               <strong className="text-foreground">
-                ৳{(campaign.goalAmount || 0).toLocaleString()}
+                ৳{(campaign.targetAmount || 0).toLocaleString()}
               </strong>
             </span>
           </div>

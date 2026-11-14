@@ -26,3 +26,7 @@ export const createCampaign = (payload: CreateCampaignPayload) => {
 export const getMyCampaigns = () => {
   return apiClient("/fund-campaigns/my-campaigns");
 };
+
+export const getAllMyCampaigns = () => {
+  return apiClient("/fund-campaigns/all");
+};
