@@ -6,6 +6,8 @@ import { useGetMe } from "@/hooks";
 import type { UserRole } from "@/types";
 import AccessDenied from "./access-denied";
 import AuthLoading from "./auth-loading";
+import { DashboardSkeleton } from "./dashboard-skeleton";
+import { ForbiddenAccess } from "./forbidden-access";
 
 interface IProps {
   children: ReactNode;
@@ -28,18 +30,17 @@ const RoleGuard = ({ children, role }: IProps) => {
     }
   }, [isPending, isError, data, router]);
 
-  if (isPending) return <AuthLoading />;
+  if (isPending) return <DashboardSkeleton />;
 
   if (isError || !data) {
-    return null;
-    // TODO: a loading state is already handled above, so we can return null here
+    return <AccessDenied />;
   }
 
-  if (isAuthorized) {
-    return <>{children}</>;
+  if (!isAuthorized) {
+    return <ForbiddenAccess />;
   }
 
-  return <AccessDenied />;
+  return <>{children}</>;
 };
 
 export default RoleGuard;

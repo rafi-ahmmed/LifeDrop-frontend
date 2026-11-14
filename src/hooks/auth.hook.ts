@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import {
   DonorRegister,
   getMe,
@@ -40,6 +40,14 @@ export const useLogout = () => {
 
 export const useGetMe = () => {
   return useQuery({
+    queryKey: ["user"],
+    queryFn: getMe,
+    retry: false,
+  });
+};
+
+export const useGetMeSuspense = () => {
+  return useSuspenseQuery({
     queryKey: ["user"],
     queryFn: getMe,
     retry: false,

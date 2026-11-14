@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { useGetMe } from "@/hooks";
 import AuthLoading from "./auth-loading";
+import { DashboardSkeleton } from "./dashboard-skeleton";
 
 const AuthGuard = ({ children }: { children: ReactNode }) => {
   const { data, isPending, isError } = useGetMe();
@@ -17,11 +18,11 @@ const AuthGuard = ({ children }: { children: ReactNode }) => {
     }
   }, [isPending, isError, data, router]);
 
-  if (isPending) return <AuthLoading />;
+  if (isPending) return <DashboardSkeleton />;
 
   if (isError || !data) {
+    router.replace("/login");
     return null;
-    // TODO: a loading state is already handled above, so we can return null here
   }
 
   return <>{children}</>;

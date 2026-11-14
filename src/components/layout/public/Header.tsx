@@ -11,6 +11,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { useGetMe, useLogout } from "@/hooks";
 import type { UserRole } from "@/types";
@@ -80,13 +81,17 @@ export default function Header() {
               </Link>
             ))}
 
-            {role && (
-              <Link
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-                href={`${dashboardRoutes[role]}`}
-              >
-                Dashboard
-              </Link>
+            {isLoading ? (
+              <Skeleton className="h-5 w-15 rounded-md" />
+            ) : (
+              role && (
+                <Link
+                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                  href={dashboardRoutes[role]}
+                >
+                  Dashboard
+                </Link>
+              )
             )}
           </nav>
 
@@ -95,9 +100,12 @@ export default function Header() {
             {/* Theme Toggle Icon (Right Side) */}
             <ThemeToggle />
 
-            {/* Desktop Login Button */}
+            {isLoading && (
+              <Skeleton className=" items-center justify-center px-9 py-4 text-sm font-medium  text-grey shadow-sm" />
+            )}
 
-            {!user && !isLoading && (
+            {/* Desktop Login Button */}
+            {!isLoading && !user && (
               <Button
                 nativeButton={false}
                 render={<Link href="/login" />}
@@ -107,13 +115,12 @@ export default function Header() {
               </Button>
             )}
 
-            {user && !isLoading && (
+            {!isLoading && user && (
               <Button
                 onClick={handleLogout}
                 variant="ghost"
                 className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 text-red-500 font-medium text-sm transition-colors"
               >
-                <LogOut className="w-4 h-4" />
                 <span>Logout</span>
               </Button>
             )}

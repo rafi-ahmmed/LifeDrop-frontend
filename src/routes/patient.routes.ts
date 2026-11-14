@@ -6,6 +6,7 @@ export const patientRoutes = [
     items: [
       { title: "Overview", url: `${prefix}` },
       { title: "Create Campaign", url: `${prefix}/create-campaign` },
+      { title: "My Campaigns", url: `${prefix}/my-campaigns` },
     ],
   },
   {

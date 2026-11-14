@@ -22,3 +22,7 @@ export const createCampaign = (payload: CreateCampaignPayload) => {
     body: formData,
   });
 };
+
+export const getMyCampaigns = () => {
+  return apiClient("/fund-campaigns/my-campaigns");
+};

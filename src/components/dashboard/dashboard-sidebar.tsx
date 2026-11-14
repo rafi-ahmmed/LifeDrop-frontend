@@ -29,6 +29,7 @@ const sidebarRoutes: Record<UserRole, SidebarItems> = {
 export function DashboardSidebar({ role }: { role: UserRole }) {
   const routes: SidebarItems = sidebarRoutes[role] || [];
   const pathname = usePathname();
+
   return (
     <Sidebar>
       <SidebarHeader className="flex h-14 items-center px-4 border-b">
