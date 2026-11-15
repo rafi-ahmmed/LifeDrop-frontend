@@ -3,7 +3,7 @@ import { CreateCampaignForm } from "@/components/from/create-campaign-from";
 
 export default function CreateCampaignPage() {
   return (
-    <div className="flex flex-1 flex-col gap-6 p-1 max-w-4xl mx-auto w-full">
+    <div className="flex flex-1 flex-col gap-6 p-2 sm:p-4 md:p-6 max-w-5xl mx-auto w-full">
       {/* Page Header with Gradient Accent */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-5">
         <div className="flex items-center space-x-3.5">
