@@ -1,7 +1,7 @@
 export const AllCampaignsSkeleton = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10 animate-pulse">
-      {[1, 2, 3, 4].map((item) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10 animate-pulse">
+      {[1, 2, 3, 4, 5, 6].map((item) => (
         <div
           key={item}
           className="bg-card border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 space-y-4 shadow-sm relative overflow-hidden"

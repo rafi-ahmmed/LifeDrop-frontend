@@ -10,14 +10,17 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { TFundCampaign } from "@/types/campaign.type";
+import { CampaignDetailsModal } from "./campaign-details-modal";
 
 interface AllCampaignCardProps {
   campaign: TFundCampaign;
 }
 
 export const AllCampaignCard = ({ campaign }: AllCampaignCardProps) => {
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const progress = Math.min(
     Math.round(
       ((Number(campaign.collectedAmount) || 0) /
@@ -103,13 +106,13 @@ export const AllCampaignCard = ({ campaign }: AllCampaignCardProps) => {
         </div>
       </div>
 
-      {/* দুটি আলাদা বাটন (View Details এবং Donate) */}
+      {/* দুটি বাটন (View Details Modal এবং Donate) */}
       <div className="grid grid-cols-2 gap-2 pt-1">
         <Button
-          nativeButton={false}
-          render={<Link href={`/campaigns/${campaign.id}`} />}
+          type="button"
           variant="outline"
-          className="h-9 text-xs font-semibold shadow-none border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center gap-1.5"
+          onClick={() => setIsDetailsOpen(true)}
+          className="h-9 text-xs font-semibold shadow-none border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center gap-1.5 cursor-pointer"
         >
           <Eye className="w-3.5 h-3.5 text-muted-foreground" />
           <span>Details</span>
@@ -124,6 +127,13 @@ export const AllCampaignCard = ({ campaign }: AllCampaignCardProps) => {
           <span>Donate Now</span>
         </Button>
       </div>
+
+      {/* Campaign Details Modal */}
+      <CampaignDetailsModal
+        campaign={campaign}
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+      />
     </div>
   );
 };

@@ -21,6 +21,13 @@ export const useGetCampaignsSuspense = () => {
   });
 };
 
+export const useGetAllCampaigns = () => {
+  return useQuery({
+    queryKey: ["all-campaigns"],
+    queryFn: getAllMyCampaigns,
+  });
+};
+
 export const useGetAllCampaignsSuspense = () => {
   return useSuspenseQuery({
     queryKey: ["all-campaigns"],

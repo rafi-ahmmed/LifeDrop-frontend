@@ -17,10 +17,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { campaignStatusConfig } from "@/config/campaign-tatus";
-import type { Campaign } from "@/types/campaign.type";
+import type { TFundCampaign } from "@/types/campaign.type";
 
 interface CampaignDetailsDialogProps {
-  campaign: Campaign | null;
+  campaign: TFundCampaign | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -33,15 +33,14 @@ export function CampaignDetailsModal({
   if (!campaign) return null;
 
   const currentStatus =
-    campaignStatusConfig[campaign.status] || campaignStatusConfig.PENDING;
+    campaignStatusConfig[
+      campaign.status as keyof typeof campaignStatusConfig
+    ] || campaignStatusConfig.PENDING;
   const StatusIcon = currentStatus.icon;
 
-  const progress = Math.min(
-    Math.round(
-      ((campaign.raisedAmount || 0) / (campaign.goalAmount || 1)) * 100,
-    ),
-    100,
-  );
+  const collected = Number(campaign.collectedAmount) || 0;
+  const target = Number(campaign.targetAmount) || 1;
+  const progress = Math.min(Math.round((collected / target) * 100), 100);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -79,7 +78,7 @@ export function CampaignDetailsModal({
                   Raised Amount
                 </span>
                 <p className="text-lg font-extrabold text-foreground">
-                  ৳{(campaign.raisedAmount || 0).toLocaleString()}
+                  ৳{collected.toLocaleString()}
                 </p>
               </div>
               <div className="space-y-1">
@@ -88,7 +87,7 @@ export function CampaignDetailsModal({
                   Target Goal
                 </span>
                 <p className="text-lg font-extrabold text-foreground">
-                  ৳{(campaign.goalAmount || 0).toLocaleString()}
+                  ৳{target.toLocaleString()}
                 </p>
               </div>
             </div>
@@ -103,11 +102,7 @@ export function CampaignDetailsModal({
               <div className="flex justify-between text-[11px] font-medium text-muted-foreground">
                 <span>{progress}% Completed</span>
                 <span>
-                  Remaining: ৳
-                  {Math.max(
-                    (campaign.goalAmount || 0) - (campaign.raisedAmount || 0),
-                    0,
-                  ).toLocaleString()}
+                  Remaining: ৳{Math.max(target - collected, 0).toLocaleString()}
                 </span>
               </div>
             </div>
