@@ -1,12 +1,19 @@
-import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import {
   createBloodRequest,
   deleteBloodRequest,
   getMyBloodRequests,
+  getMyDonorRequests,
   matchingDonor,
   sendDonorRequests,
+  updateDonorRequestStatus,
 } from "@/api";
-import type { TDonorMatchingParams } from "@/types";
+import type { DonorRequestStatusAction, TDonorMatchingParams } from "@/types";
 
 export const useCreateBloodRequest = () => {
   return useMutation({
@@ -63,5 +70,38 @@ export const useSendDonorRequests = () => {
       requestId: string;
       donorIds: string[];
     }) => sendDonorRequests(requestId, donorIds),
+  });
+};
+
+export const useGetMyDonorRequests = () => {
+  return useQuery({
+    queryKey: ["my-donor-requests"],
+    queryFn: getMyDonorRequests,
+  });
+};
+
+export const useGetMyDonorRequestsSuspense = () => {
+  return useSuspenseQuery({
+    queryKey: ["my-donor-requests"],
+    queryFn: getMyDonorRequests,
+  });
+};
+
+export const useUpdateDonorRequestStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      donorRequestId,
+      status,
+    }: {
+      donorRequestId: string;
+      status: DonorRequestStatusAction;
+    }) => updateDonorRequestStatus(donorRequestId, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-donor-requests"] });
+      queryClient.invalidateQueries({ queryKey: ["my-blood-requests"] });
+      queryClient.invalidateQueries({ queryKey: ["patient-stats"] });
+    },
   });
 };

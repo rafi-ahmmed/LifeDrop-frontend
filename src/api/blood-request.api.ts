@@ -1,5 +1,9 @@
 import apiClient from "@/lib/api-client";
-import type { TDonorMatchingParams } from "@/types";
+import type {
+  DonorRequestStatusAction,
+  TDonorMatchingParams,
+  TDonorRequestsApiResponse,
+} from "@/types";
 import type { CreateBloodRequestPayload } from "@/validation";
 
 export const createBloodRequest = (payload: CreateBloodRequestPayload) => {
@@ -16,6 +20,7 @@ export const getMyBloodRequests = () => {
   return apiClient("/blood-requests/my-requests");
 };
 
+// TODO:
 export const deleteBloodRequest = (id: string) => {
   return apiClient(`/blood-requests/${id}`, {
     method: "DELETE",
@@ -40,5 +45,19 @@ export const sendDonorRequests = (requestId: string, donorIds: string[]) => {
   return apiClient(`/donor-requests/send-requests/${requestId}`, {
     method: "POST",
     body: { donorIds },
+  });
+};
+
+export const getMyDonorRequests = () => {
+  return apiClient<TDonorRequestsApiResponse>("/blood-requests/donor-requests");
+};
+
+export const updateDonorRequestStatus = (
+  donorRequestId: string,
+  status: DonorRequestStatusAction,
+) => {
+  return apiClient(`/donor-requests/status/${donorRequestId}`, {
+    method: "PATCH",
+    body: { status },
   });
 };
