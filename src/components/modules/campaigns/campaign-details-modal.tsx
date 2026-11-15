@@ -15,6 +15,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,18 +26,23 @@ import {
 } from "@/components/ui/dialog";
 import { campaignStatusConfig } from "@/config/campaign-tatus";
 import type { TFundCampaign } from "@/types/campaign.type";
+import { DonateModal } from "./donate-modal";
 
 interface CampaignDetailsModalProps {
   campaign: TFundCampaign | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onDonateClick?: () => void;
 }
 
 export function CampaignDetailsModal({
   campaign,
   open,
   onOpenChange,
+  onDonateClick,
 }: CampaignDetailsModalProps) {
+  const [isDonateOpen, setIsDonateOpen] = useState(false);
+
   if (!campaign) return null;
 
   const currentStatus =
@@ -241,8 +247,14 @@ export function CampaignDetailsModal({
             </Button>
 
             <Button
-              nativeButton={false}
-              render={<Link href={`/campaigns/${campaign.id}/donate`} />}
+              type="button"
+              onClick={() => {
+                if (onDonateClick) {
+                  onDonateClick();
+                } else {
+                  setIsDonateOpen(true);
+                }
+              }}
               className="w-full sm:w-auto text-xs bg-primary hover:bg-primary/90 text-primary-foreground font-semibold flex items-center justify-center gap-1.5"
             >
               <Heart className="w-3.5 h-3.5 fill-current" />
@@ -250,6 +262,12 @@ export function CampaignDetailsModal({
             </Button>
           </div>
         </div>
+
+        <DonateModal
+          campaign={campaign}
+          open={isDonateOpen}
+          onOpenChange={setIsDonateOpen}
+        />
       </DialogContent>
     </Dialog>
   );

@@ -1,6 +1,6 @@
 export function MyRequestSkeleton() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10 animate-pulse">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
       {[1, 2, 3, 4, 5, 6].map((item) => (
         <div
           key={item}

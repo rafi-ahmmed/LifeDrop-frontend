@@ -3,7 +3,6 @@
 import {
   Calendar,
   Clock,
-  Droplet,
   Eye,
   MapPin,
   ShieldAlert,

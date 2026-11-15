@@ -46,3 +46,8 @@ export interface PaymentApiResponse {
   meta?: Record<string, unknown>;
   data: TPayment[];
 }
+
+export interface CreatePaymentPayload {
+  campaignId: string;
+  amount: number;
+}

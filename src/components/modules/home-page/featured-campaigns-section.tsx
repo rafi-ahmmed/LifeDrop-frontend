@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { CampaignDetailsModal } from "@/components/modules/campaigns/campaign-details-modal";
+import { DonateModal } from "@/components/modules/campaigns/donate-modal";
 import { Button } from "@/components/ui/button";
 import { useGetAllCampaigns } from "@/hooks";
 import type { TFundCampaign } from "@/types/campaign.type";
@@ -83,6 +84,8 @@ const fallbackCampaigns: TFundCampaign[] = [
 export function FeaturedCampaignsSection() {
   const { data: response } = useGetAllCampaigns();
   const [selectedCampaign, setSelectedCampaign] =
+    useState<TFundCampaign | null>(null);
+  const [selectedDonateCampaign, setSelectedDonateCampaign] =
     useState<TFundCampaign | null>(null);
 
   const apiCampaigns: TFundCampaign[] = Array.isArray(response?.data)
@@ -224,9 +227,9 @@ export function FeaturedCampaignsSection() {
                   </Button>
 
                   <Button
-                    nativeButton={false}
-                    render={<Link href={`/campaigns/${campaign.id}/donate`} />}
-                    className="h-9 text-xs font-semibold rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5"
+                    type="button"
+                    onClick={() => setSelectedDonateCampaign(campaign)}
+                    className="h-9 text-xs font-semibold rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5 cursor-pointer"
                   >
                     <Heart className="w-3.5 h-3.5 fill-current" />
                     <span>Donate Now</span>
@@ -243,6 +246,20 @@ export function FeaturedCampaignsSection() {
           open={!!selectedCampaign}
           onOpenChange={(isOpen) => {
             if (!isOpen) setSelectedCampaign(null);
+          }}
+          onDonateClick={() => {
+            const targetCamp = selectedCampaign;
+            setSelectedCampaign(null);
+            setSelectedDonateCampaign(targetCamp);
+          }}
+        />
+
+        {/* Modal for Donation */}
+        <DonateModal
+          campaign={selectedDonateCampaign}
+          open={!!selectedDonateCampaign}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) setSelectedDonateCampaign(null);
           }}
         />
       </div>

@@ -14,6 +14,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { TFundCampaign } from "@/types/campaign.type";
 import { CampaignDetailsModal } from "./campaign-details-modal";
+import { DonateModal } from "./donate-modal";
 
 interface AllCampaignCardProps {
   campaign: TFundCampaign;
@@ -21,6 +22,7 @@ interface AllCampaignCardProps {
 
 export const AllCampaignCard = ({ campaign }: AllCampaignCardProps) => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isDonateOpen, setIsDonateOpen] = useState(false);
   const progress = Math.min(
     Math.round(
       ((Number(campaign.collectedAmount) || 0) /
@@ -119,9 +121,9 @@ export const AllCampaignCard = ({ campaign }: AllCampaignCardProps) => {
         </Button>
 
         <Button
-          nativeButton={false}
-          render={<Link href={`/campaigns/${campaign.id}/donate`} />}
-          className="h-9 text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm flex items-center justify-center gap-1.5 group/btn"
+          type="button"
+          onClick={() => setIsDonateOpen(true)}
+          className="h-9 text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm flex items-center justify-center gap-1.5 group/btn cursor-pointer"
         >
           <Heart className="w-3.5 h-3.5 fill-current" />
           <span>Donate Now</span>
@@ -133,6 +135,17 @@ export const AllCampaignCard = ({ campaign }: AllCampaignCardProps) => {
         campaign={campaign}
         open={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
+        onDonateClick={() => {
+          setIsDetailsOpen(false);
+          setIsDonateOpen(true);
+        }}
+      />
+
+      {/* Donate Modal */}
+      <DonateModal
+        campaign={campaign}
+        open={isDonateOpen}
+        onOpenChange={setIsDonateOpen}
       />
     </div>
   );

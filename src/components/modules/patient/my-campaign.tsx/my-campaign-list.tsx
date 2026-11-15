@@ -20,7 +20,7 @@ const MyCampaignList = () => {
 
   if (campaignsList.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 bg-card border rounded-2xl text-center space-y-4 my-8 relative z-10">
+      <div className="flex flex-col items-center justify-center p-12 bg-card border rounded-2xl text-center space-y-4 my-8">
         <div className="flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 text-primary">
           <FolderOpen className="w-7 h-7" />
         </div>
@@ -44,7 +44,7 @@ const MyCampaignList = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {campaignsList.map((campaign) => (
           <CampaignCard key={campaign.id} campaign={campaign} />
         ))}
