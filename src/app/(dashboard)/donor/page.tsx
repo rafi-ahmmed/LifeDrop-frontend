@@ -1,7 +1,12 @@
-export default function DonorPage() {
+import { Suspense } from "react";
+import { DonorOverview } from "@/components/modules/donor/donor-overview";
+import { DonorOverviewSkeleton } from "@/components/modules/donor/donor-overview-skeleton";
+
+
+export default function Page() {
   return (
-    <div>
-      <h1>DonorPage</h1>
-    </div>
+    <Suspense fallback={<DonorOverviewSkeleton />}>
+      <DonorOverview />
+    </Suspense>
   );
 }

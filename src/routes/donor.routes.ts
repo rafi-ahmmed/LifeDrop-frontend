@@ -5,7 +5,7 @@ export const donorRoutes = [
     title: "Management",
     items: [
       { title: "Overview", url: `${prefix}` },
-      { title: "Donor Approval", url: `${prefix}/donor-approval` },
+      { title: "My Blood Requests", url: `${prefix}/my-blood-requests` },
     ],
   },
   {
