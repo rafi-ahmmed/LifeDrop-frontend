@@ -19,6 +19,12 @@ export const bloodRequestStatusConfig = {
     color: "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400",
     icon: CheckCircle2,
   },
+  MATCHING: {
+    label: "Matching",
+    color:
+      "bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400",
+    icon: Sparkles,
+  },
   ACTIVE: {
     label: "Active Request",
     color: "bg-rose-500/10 text-rose-600 border-rose-500/20 dark:text-rose-400",
@@ -34,6 +40,12 @@ export const bloodRequestStatusConfig = {
     label: "Rejected",
     color: "bg-zinc-500/10 text-zinc-600 border-zinc-500/20 dark:text-zinc-400",
     icon: XCircle,
+  },
+  EXPIRED: {
+    label: "Expired",
+    color:
+      "bg-orange-500/10 text-orange-600 border-orange-500/20 dark:text-orange-400",
+    icon: AlertCircle,
   },
   CANCELLED: {
     label: "Cancelled",

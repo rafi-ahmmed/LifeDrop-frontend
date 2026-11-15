@@ -11,11 +11,12 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CampaignDetailsModal } from "@/components/modules/campaigns/campaign-details-modal";
 import { DonateModal } from "@/components/modules/campaigns/donate-modal";
 import { Button } from "@/components/ui/button";
-import { useGetAllCampaigns } from "@/hooks";
+import { useGetAllCampaigns, useGetMe } from "@/hooks";
 import type { TFundCampaign } from "@/types/campaign.type";
 
 const fallbackCampaigns: TFundCampaign[] = [
@@ -82,11 +83,21 @@ const fallbackCampaigns: TFundCampaign[] = [
 ];
 
 export function FeaturedCampaignsSection() {
+  const router = useRouter();
+  const { data: userResponse } = useGetMe();
   const { data: response } = useGetAllCampaigns();
   const [selectedCampaign, setSelectedCampaign] =
     useState<TFundCampaign | null>(null);
   const [selectedDonateCampaign, setSelectedDonateCampaign] =
     useState<TFundCampaign | null>(null);
+
+  const handleDonateClick = (campaign: TFundCampaign) => {
+    if (!userResponse?.data) {
+      router.push("/login");
+      return;
+    }
+    setSelectedDonateCampaign(campaign);
+  };
 
   const apiCampaigns: TFundCampaign[] = Array.isArray(response?.data)
     ? response.data
@@ -228,7 +239,7 @@ export function FeaturedCampaignsSection() {
 
                   <Button
                     type="button"
-                    onClick={() => setSelectedDonateCampaign(campaign)}
+                    onClick={() => handleDonateClick(campaign)}
                     className="h-9 text-xs font-semibold rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground gap-1.5 cursor-pointer"
                   >
                     <Heart className="w-3.5 h-3.5 fill-current" />
@@ -248,9 +259,11 @@ export function FeaturedCampaignsSection() {
             if (!isOpen) setSelectedCampaign(null);
           }}
           onDonateClick={() => {
-            const targetCamp = selectedCampaign;
-            setSelectedCampaign(null);
-            setSelectedDonateCampaign(targetCamp);
+            if (selectedCampaign) {
+              const targetCamp = selectedCampaign;
+              setSelectedCampaign(null);
+              handleDonateClick(targetCamp);
+            }
           }}
         />
 

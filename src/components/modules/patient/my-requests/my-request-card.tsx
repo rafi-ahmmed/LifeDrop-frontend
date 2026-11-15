@@ -1,13 +1,16 @@
 "use client";
 
 import {
+  ArrowRight,
   Calendar,
   Clock,
   Eye,
   MapPin,
   ShieldAlert,
   Trash2,
+  Users,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +34,9 @@ export function MyRequestCard({ request }: MyRequestCardProps) {
       request.status as keyof typeof bloodRequestStatusConfig
     ] || bloodRequestStatusConfig.PENDING;
   const StatusIcon = currentStatus.icon;
+
+  const isMatchingAvailable =
+    request.status === "APPROVED" || request.status === "MATCHING";
 
   return (
     <>
@@ -109,6 +115,23 @@ export function MyRequestCard({ request }: MyRequestCardProps) {
               : "N/A"}
           </span>
         </div>
+
+        {/* Matching Donors Action (Shown ONLY when status is APPROVED or MATCHING) */}
+        {isMatchingAvailable && (
+          <Button
+            nativeButton={false}
+            render={
+              <Link
+                href={`/patient/my-requests/${request.id}/matching-donors`}
+              />
+            }
+            className="w-full h-9 rounded-xl bg-gradient-to-r from-rose-500 to-primary hover:opacity-95 text-white font-semibold text-xs shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>Matching Donors</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
+          </Button>
+        )}
 
         {/* Footer Actions */}
         <div className="flex items-center justify-between pt-3 border-t text-xs">

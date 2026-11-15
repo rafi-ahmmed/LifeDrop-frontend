@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useCreateBloodRequest } from "@/hooks";
@@ -294,16 +295,11 @@ export function CreateBloodRequestForm() {
                 htmlFor="urgency-toggle"
                 className="flex items-center gap-3 cursor-pointer select-none p-4 rounded-xl border border-border/80 bg-muted/30 hover:bg-muted/50 transition-colors"
               >
-                <input
+                <Switch
                   id="urgency-toggle"
-                  type="checkbox"
                   checked={field.value}
-                  onChange={(e) => field.onChange(e.target.checked)}
-                  className="sr-only peer"
+                  onCheckedChange={field.onChange}
                 />
-                <div className="relative w-11 h-6 bg-muted rounded-full peer peer-checked:bg-rose-500 transition-colors shrink-0">
-                  <div className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform peer-checked:translate-x-5" />
-                </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-bold text-foreground">
                     Mark as Urgent Emergency

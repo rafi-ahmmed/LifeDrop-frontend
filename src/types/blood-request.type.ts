@@ -2,8 +2,10 @@ export type BloodRequestStatus =
   | "PENDING"
   | "APPROVED"
   | "REJECTED"
-  | "ACTIVE"
+  | "MATCHING"
   | "FULFILLED"
+  | "EXPIRED"
+  | "ACTIVE"
   | "CANCELLED";
 
 export type TBloodRequest = {
@@ -24,4 +26,21 @@ export type TBloodRequest = {
   reviewerId?: string | null;
   createdAt: string;
   updatedAt: string;
+};
+
+export interface TDonorMatchingParams {
+  exactLocation?: boolean;
+  exactDistrict?: boolean;
+}
+
+export type TMatchingDonor = {
+  id: string;
+  bloodGroup: string;
+  district: string;
+  address: string;
+};
+
+export type TMatchingDonorsResponse = {
+  matchingDonors: TMatchingDonor[];
+  unsentDonorIds: string[];
 };

@@ -2,6 +2,7 @@
 
 import {
   AlertTriangle,
+  ArrowRight,
   Calendar,
   Check,
   Clock,
@@ -12,7 +13,9 @@ import {
   Phone,
   ShieldAlert,
   User,
+  Users,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -231,6 +234,26 @@ export function RequestDetailsModal({
                 <p className="text-muted-foreground leading-relaxed bg-card border rounded-lg p-3 max-h-32 overflow-y-auto">
                   {request.description}
                 </p>
+              </div>
+            )}
+
+            {/* Matching Donors Action (Shown ONLY when status is APPROVED or MATCHING) */}
+            {(request.status === "APPROVED" ||
+              request.status === "MATCHING") && (
+              <div className="pt-2">
+                <Button
+                  nativeButton={false}
+                  render={
+                    <Link
+                      href={`/patient/my-requests/${request.id}/matching-donors`}
+                    />
+                  }
+                  className="w-full h-10 rounded-xl bg-gradient-to-r from-rose-500 to-primary hover:opacity-95 text-white font-semibold text-xs shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Users className="w-4 h-4" />
+                  <span>View Matching Donors</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Button>
               </div>
             )}
           </div>

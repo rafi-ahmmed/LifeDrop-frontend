@@ -1,4 +1,5 @@
 import apiClient from "@/lib/api-client";
+import type { TDonorMatchingParams } from "@/types";
 import type { CreateBloodRequestPayload } from "@/validation";
 
 export const createBloodRequest = (payload: CreateBloodRequestPayload) => {
@@ -18,5 +19,26 @@ export const getMyBloodRequests = () => {
 export const deleteBloodRequest = (id: string) => {
   return apiClient(`/blood-requests/${id}`, {
     method: "DELETE",
+  });
+};
+
+export const matchingDonor = (
+  requestId: string,
+  params?: TDonorMatchingParams,
+) => {
+  const query: Record<string, string> = {};
+  if (params?.exactDistrict) query.exactDistrict = "true";
+  if (params?.exactLocation) query.exactLocation = "true";
+
+  return apiClient(`/blood-requests/match-donors/${requestId}`, {
+    method: "GET",
+    query,
+  });
+};
+
+export const sendDonorRequests = (requestId: string, donorIds: string[]) => {
+  return apiClient(`/donor-requests/send-requests/${requestId}`, {
+    method: "POST",
+    body: { donorIds },
   });
 };

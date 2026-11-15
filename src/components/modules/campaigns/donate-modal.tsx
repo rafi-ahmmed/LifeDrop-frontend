@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertCircle, Heart, ShieldCheck, Sparkles } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { FetchError } from "ofetch";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/toast";
+import { useGetMe } from "@/hooks/auth.hook";
 import { useCreatePaymentByBkash } from "@/hooks/payment.hook";
 import type { TFundCampaign } from "@/types/campaign.type";
 
@@ -32,6 +34,9 @@ export function DonateModal({
   open,
   onOpenChange,
 }: DonateModalProps) {
+  const router = useRouter();
+  const { data: userData } = useGetMe();
+
   const [amount, setAmount] = useState<string>("1000");
   const [error, setError] = useState<string | null>(null);
 
@@ -51,21 +56,25 @@ export function DonateModal({
   const remaining = Math.max(target - collected, 0);
 
   const handlePay = () => {
+    // Check authentication: directly redirect to login without showing any error message
+    if (!userData?.data) {
+      onOpenChange(false);
+      router.push("/login");
+      return;
+    }
+
     const numAmount = Number(amount);
 
-    // 1. Validate > 0
     if (!amount || Number.isNaN(numAmount) || numAmount <= 0) {
       setError("Donation amount must be greater than 0 TK.");
       return;
     }
 
-    // 2. Validate Minimum 10 TK
     if (numAmount < 10) {
       setError("Minimum donation amount is ৳10.");
       return;
     }
 
-    // 3. Validate Remaining Target (if remaining target is available)
     if (remaining > 0 && numAmount > remaining) {
       setError(
         `Donation amount cannot exceed the remaining target of ${remaining.toLocaleString()} TK.`,
@@ -101,6 +110,18 @@ export function DonateModal({
           }
         },
         onError: (err: any) => {
+          const isUnauthorized =
+            (err instanceof FetchError &&
+              (err.status === 401 || err.statusCode === 401)) ||
+            err?.statusCode === 401 ||
+            err?.status === 401;
+
+          if (isUnauthorized) {
+            onOpenChange(false);
+            router.push("/login");
+            return;
+          }
+
           // Extract backend API error message
           const message =
             err instanceof FetchError

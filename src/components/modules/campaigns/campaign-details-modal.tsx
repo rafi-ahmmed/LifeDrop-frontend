@@ -15,6 +15,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { campaignStatusConfig } from "@/config/campaign-tatus";
+import { useGetMe } from "@/hooks/auth.hook";
 import type { TFundCampaign } from "@/types/campaign.type";
 import { DonateModal } from "./donate-modal";
 
@@ -41,7 +43,22 @@ export function CampaignDetailsModal({
   onOpenChange,
   onDonateClick,
 }: CampaignDetailsModalProps) {
+  const router = useRouter();
+  const { data: userResponse } = useGetMe();
   const [isDonateOpen, setIsDonateOpen] = useState(false);
+
+  const handleDonate = () => {
+    if (!userResponse?.data) {
+      onOpenChange(false);
+      router.push("/login");
+      return;
+    }
+    if (onDonateClick) {
+      onDonateClick();
+    } else {
+      setIsDonateOpen(true);
+    }
+  };
 
   if (!campaign) return null;
 
@@ -248,14 +265,8 @@ export function CampaignDetailsModal({
 
             <Button
               type="button"
-              onClick={() => {
-                if (onDonateClick) {
-                  onDonateClick();
-                } else {
-                  setIsDonateOpen(true);
-                }
-              }}
-              className="w-full sm:w-auto text-xs bg-primary hover:bg-primary/90 text-primary-foreground font-semibold flex items-center justify-center gap-1.5"
+              onClick={handleDonate}
+              className="w-full sm:w-auto text-xs bg-primary hover:bg-primary/90 text-primary-foreground font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Heart className="w-3.5 h-3.5 fill-current" />
               <span>Donate Now</span>

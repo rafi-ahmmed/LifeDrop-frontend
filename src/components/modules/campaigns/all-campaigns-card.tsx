@@ -9,9 +9,10 @@ import {
   HeartHandshake,
   User,
 } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useGetMe } from "@/hooks/auth.hook";
 import type { TFundCampaign } from "@/types/campaign.type";
 import { CampaignDetailsModal } from "./campaign-details-modal";
 import { DonateModal } from "./donate-modal";
@@ -21,8 +22,20 @@ interface AllCampaignCardProps {
 }
 
 export const AllCampaignCard = ({ campaign }: AllCampaignCardProps) => {
+  const router = useRouter();
+  const { data: userResponse } = useGetMe();
+
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isDonateOpen, setIsDonateOpen] = useState(false);
+
+  const handleDonateClick = () => {
+    if (!userResponse?.data) {
+      router.push("/login");
+      return;
+    }
+    setIsDetailsOpen(false);
+    setIsDonateOpen(true);
+  };
   const progress = Math.min(
     Math.round(
       ((Number(campaign.collectedAmount) || 0) /
@@ -122,7 +135,7 @@ export const AllCampaignCard = ({ campaign }: AllCampaignCardProps) => {
 
         <Button
           type="button"
-          onClick={() => setIsDonateOpen(true)}
+          onClick={handleDonateClick}
           className="h-9 text-xs font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm flex items-center justify-center gap-1.5 group/btn cursor-pointer"
         >
           <Heart className="w-3.5 h-3.5 fill-current" />
@@ -135,10 +148,7 @@ export const AllCampaignCard = ({ campaign }: AllCampaignCardProps) => {
         campaign={campaign}
         open={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
-        onDonateClick={() => {
-          setIsDetailsOpen(false);
-          setIsDonateOpen(true);
-        }}
+        onDonateClick={handleDonateClick}
       />
 
       {/* Donate Modal */}
