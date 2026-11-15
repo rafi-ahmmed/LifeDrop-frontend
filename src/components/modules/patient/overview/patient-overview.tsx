@@ -131,9 +131,13 @@ export function PatientOverview() {
               Total emergency requests submitted
             </p>
           </div>
-          <div className="pt-1 border-t border-border/60 text-[11px] text-muted-foreground">
-            All hospital blood calls
-          </div>
+          <Link
+            href="/patient/my-requests"
+            className="inline-flex items-center text-xs font-bold text-rose-500 hover:underline gap-1 pt-1 border-t border-border/60"
+          >
+            <span>View all requests</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
         {/* Active Blood Requests */}

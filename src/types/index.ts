@@ -1,4 +1,6 @@
 export * from "./auth.type";
-export * from "./payment.type";
+export * from "./blood-request.type";
+export * from "./campaign.type";
 export * from "./patient.type";
+export * from "./payment.type";
 export * from "./user.types";
