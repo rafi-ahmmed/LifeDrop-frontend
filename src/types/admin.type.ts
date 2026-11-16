@@ -1,4 +1,5 @@
 import type { TBloodRequest } from "./blood-request.type";
+import type { TUserItem,  UserStatus } from "./user.types";
 
 export interface TAdminUsersStats {
   totalPatients: number;
@@ -63,4 +64,14 @@ export interface TAllBloodRequestsResponse {
 
 export interface TUpdateStatusPayload {
   status: "APPROVED" | "REJECTED";
+}
+
+export interface TAllUsersResponse {
+  success: boolean;
+  message: string;
+  data: TUserItem[];
+}
+
+export interface TUpdateUserStatusPayload {
+  status: UserStatus;
 }
