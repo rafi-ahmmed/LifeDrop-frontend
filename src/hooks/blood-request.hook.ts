@@ -102,6 +102,7 @@ export const useUpdateDonorRequestStatus = () => {
       queryClient.invalidateQueries({ queryKey: ["my-donor-requests"] });
       queryClient.invalidateQueries({ queryKey: ["my-blood-requests"] });
       queryClient.invalidateQueries({ queryKey: ["patient-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["donor-stats"] });
     },
   });
 };

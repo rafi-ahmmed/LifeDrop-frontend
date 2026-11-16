@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { DonorOverview } from "@/components/modules/donor/donor-overview";
-import { DonorOverviewSkeleton } from "@/components/modules/donor/donor-overview-skeleton";
+import { DonorOverview } from "@/components/modules/donor/overview/donor-overview";
+import { DonorOverviewSkeleton } from "@/components/modules/donor/overview/donor-overview-skeleton";
 
 
 export default function Page() {

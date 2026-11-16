@@ -68,7 +68,6 @@ export function LoginForm({
         });
       },
       onError: (err) => {
-        console.log(err);
         const message =
           err instanceof FetchError
             ? err.data?.message || err.message
