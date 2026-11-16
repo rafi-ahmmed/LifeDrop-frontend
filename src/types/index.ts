@@ -1,3 +1,4 @@
+export * from "./admin.type";
 export * from "./auth.type";
 export * from "./blood-request.type";
 export * from "./campaign.type";

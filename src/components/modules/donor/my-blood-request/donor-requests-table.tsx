@@ -28,7 +28,6 @@ import { RequestDetailsModalForDonor } from "./request-details-modal-for-donor";
 export const DonorRequestsTable = () => {
   const { data: response } = useGetMyDonorRequestForDonorSuspense();
 
-  // মিউটেশন হুক থেকে mutate এবং isPending এর পাশাপাশি variables ও আনা হলো কোন আইডি প্রসেস হচ্ছে তা চেক করতে
   const {
     mutate: respondToRequest,
     isPending,
@@ -108,7 +107,6 @@ export const DonorRequestsTable = () => {
                 req.status === "CANCELLED" ||
                 req.status === "WITHDRAWN";
 
-              // চেক করা হচ্ছে এই নির্দিষ্ট রো-এর API কল চলছে কি না
               const isThisRowLoading = isPending && variables?.id === req.id;
 
               const isInterestedDisabled =
@@ -133,7 +131,6 @@ export const DonorRequestsTable = () => {
                     </div>
                   </TableCell>
 
-                  {/* Blood Group */}
                   <TableCell>
                     <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-extrabold">
                       {formatBloodGroup(req.bloodRequest.bloodGroup)}

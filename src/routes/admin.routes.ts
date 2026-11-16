@@ -5,7 +5,9 @@ export const adminRoutes = [
     title: "Management",
     items: [
       { title: "Overview", url: `${prefix}` },
-      { title: "Donor Approval", url: `${prefix}/donor-approval` },
+      { title: "Manage Users", url: `${prefix}/manage-users` },
+      { title: "Review Campaign", url: `${prefix}/review-campaign` },
+      { title: "Manage Blood Request", url: `${prefix}/manage-blood-request` },
     ],
   },
   {
