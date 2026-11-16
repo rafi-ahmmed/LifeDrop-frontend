@@ -95,13 +95,13 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
               <Eye className="w-3.5 h-3.5 mr-1" />
               View
             </Button>
-            <Button
+            {/* <Button
               variant="ghost"
               size="sm"
               className="h-8 text-xs px-2 text-destructive hover:text-destructive hover:bg-destructive/10"
             >
               <Trash2 className="w-3.5 h-3.5" />
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>

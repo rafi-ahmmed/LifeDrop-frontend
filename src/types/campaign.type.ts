@@ -20,9 +20,8 @@ export type TFundCampaign = {
   collectedAmount: string;
   deadline: string;
   medicalDocuments: {
-    url: string;
+    fileUrl: string;
     publicId: string;
-    type: string;
   }[];
   reviewedBy: string | null;
   reviewedAt: string | null;

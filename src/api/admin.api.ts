@@ -2,7 +2,9 @@ import apiClient from "@/lib/api-client";
 import type {
   TAdminStatsResponse,
   TAllBloodRequestsResponse,
+  TAllCampaignsResponse,
   TAllUsersResponse,
+  TReviewCampaignPayload,
   TUpdateStatusPayload,
   TUpdateUserStatusPayload,
 } from "@/types";
@@ -42,6 +44,23 @@ export const updateUserStatus = ({
   payload: TUpdateUserStatusPayload;
 }) => {
   return apiClient(`/admin/users/role/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+};
+
+export const getAllAdminCampaigns = () => {
+  return apiClient<TAllCampaignsResponse>("/fund-campaigns/admin/all");
+};
+
+export const reviewFundCampaign = ({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: TReviewCampaignPayload;
+}) => {
+  return apiClient(`/fund-campaigns/admin/review/${id}`, {
     method: "PATCH",
     body: JSON.stringify(payload),
   });

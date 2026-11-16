@@ -1,5 +1,6 @@
 import type { TBloodRequest } from "./blood-request.type";
-import type { TUserItem,  UserStatus } from "./user.types";
+import type { TFundCampaign } from "./campaign.type";
+import type { TUserItem, UserStatus } from "./user.types";
 
 export interface TAdminUsersStats {
   totalPatients: number;
@@ -74,4 +75,15 @@ export interface TAllUsersResponse {
 
 export interface TUpdateUserStatusPayload {
   status: UserStatus;
+}
+
+export interface TAllCampaignsResponse {
+  success: boolean;
+  message: string;
+  data: TFundCampaign[];
+}
+
+export interface TReviewCampaignPayload {
+  status: "APPROVED" | "REJECTED";
+  rejectedReason?: string;
 }

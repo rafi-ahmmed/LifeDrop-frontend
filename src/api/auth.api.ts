@@ -3,6 +3,7 @@ import type {
   donorRegistrationPayload,
   LoginInput,
   patientRegistrationPayload,
+  TGetMeResponse,
   verifyEmailPayloadForApi,
 } from "@/types";
 
@@ -11,7 +12,7 @@ export const userLogin = (payload: LoginInput) => {
 };
 
 export const getMe = () => {
-  return apiClient("/auth/getMe");
+  return apiClient<TGetMeResponse>("/auth/getMe");
 };
 
 export const patientRegister = (payload: patientRegistrationPayload) => {

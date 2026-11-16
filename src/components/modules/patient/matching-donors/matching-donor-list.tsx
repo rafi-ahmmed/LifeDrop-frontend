@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Send, Users } from "lucide-react";
 import { FetchError } from "ofetch";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ export function MatchingDonorList({
   const donors = result?.matchingDonors ?? [];
   const unsentDonorIds = result?.unsentDonorIds ?? [];
   const unsentSet = new Set(unsentDonorIds);
+  const queryClient = useQueryClient();
 
   const handleSendAll = () => {
     if (unsentDonorIds.length === 0) return;
@@ -41,6 +43,12 @@ export function MatchingDonorList({
             });
             return;
           }
+          queryClient.invalidateQueries({ queryKey: ["matched-donor"] });
+          queryClient.invalidateQueries({ queryKey: ["my-donor-requests"] });
+          queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+          queryClient.invalidateQueries({
+            queryKey: ["donor's-donor-requests"],
+          });
           toast.add({
             title: "Requests Sent!",
             description: `Donor request sent to ${unsentDonorIds.length} donor(s).`,

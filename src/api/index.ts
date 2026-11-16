@@ -6,3 +6,4 @@ export * from "./donor.api";
 export * from "./donor-request.api";
 export * from "./patient.api";
 export * from "./payment.api";
+export * from "./profile.api";

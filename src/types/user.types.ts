@@ -45,6 +45,18 @@ export interface TUserItem {
   isVerified: boolean;
   createdAt: string;
   updatedAt: string;
-  donor: TDonorProfile | null;
-  patient: TPatientProfile | null;
+  donor?: TDonorProfile | null;
+  patient?: TPatientProfile | null;
+}
+
+export interface TGetMeResponse {
+  success: boolean;
+  message: string;
+  data: TUserItem;
+}
+
+export interface TUpdateProfilePayload {
+  phone?: string;
+  address?: string;
+  district?: string;
 }

@@ -1,9 +1,11 @@
 "use client";
 
 import {
+  AlertCircle,
   Building2,
   Calendar,
   Clock,
+  ExternalLink,
   FileText,
   Target,
   TrendingUp,
@@ -44,7 +46,7 @@ export function CampaignDetailsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg p-0 overflow-hidden rounded-2xl border">
+      <DialogContent className="sm:max-w-lg p-0 overflow-hidden rounded-2xl border max-h-[90vh] overflow-y-auto">
         <div className="h-1.5 w-full bg-gradient-to-r from-primary via-rose-500 to-primary/60" />
 
         <div className="p-6 space-y-5">
@@ -70,6 +72,22 @@ export function CampaignDetailsModal({
             </DialogDescription>
           </DialogHeader>
 
+          {/* Rejection Reason Alert Box (শুধুমাত্র REJECTED হলে দেখাবে) */}
+          {campaign.status === "REJECTED" && campaign.rejectedReason && (
+            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <div className="space-y-1 text-xs">
+                <p className="font-bold text-rose-600">
+                  Campaign Rejection Reason:
+                </p>
+                <p className="text-rose-600/90 leading-relaxed">
+                  {campaign.rejectedReason}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* ফান্ডিং প্রোগ্রেস বক্স */}
           <div className="p-4 rounded-xl bg-muted/40 border space-y-3">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
@@ -179,6 +197,37 @@ export function CampaignDetailsModal({
                 <p className="text-muted-foreground leading-relaxed bg-card border rounded-lg p-3 max-h-32 overflow-y-auto">
                   {(campaign as any).description}
                 </p>
+              </div>
+            )}
+
+            {/* Medical Documents (যদি থাকে) */}
+            {(campaign as any).medicalDocuments?.length > 0 && (
+              <div className="space-y-2 pt-1">
+                <span className="text-muted-foreground flex items-center gap-1.5 font-medium">
+                  <FileText className="w-3.5 h-3.5 text-primary" />
+                  Attached Medical Documents
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {(campaign as any).medicalDocuments.map(
+                    (
+                      doc: { fileUrl: string; publicId: string },
+                      idx: number,
+                    ) => (
+                      <a
+                        key={doc.publicId || idx}
+                        href={doc.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between p-2.5 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                      >
+                        <span className="font-medium text-foreground truncate">
+                          Document #{idx + 1}
+                        </span>
+                        <ExternalLink className="w-3.5 h-3.5 text-primary shrink-0" />
+                      </a>
+                    ),
+                  )}
+                </div>
               </div>
             )}
           </div>

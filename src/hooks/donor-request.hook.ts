@@ -3,7 +3,6 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { FetchError } from "ofetch";
 import { getMyDonorRequestForDonor, respondToDonorRequest } from "@/api";
 import { toast } from "@/components/ui/toast";
 import type { TRespondPayload } from "@/types";

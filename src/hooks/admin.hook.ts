@@ -5,13 +5,19 @@ import {
 } from "@tanstack/react-query";
 import {
   getAdminStats,
+  getAllAdminCampaigns,
   getAllBloodRequests,
   getAllUsers,
+  reviewFundCampaign,
   updateBloodRequestStatus,
   updateUserStatus,
 } from "@/api";
 import { toast } from "@/components/ui/toast";
-import type { TUpdateStatusPayload, TUpdateUserStatusPayload } from "@/types";
+import type {
+  TReviewCampaignPayload,
+  TUpdateStatusPayload,
+  TUpdateUserStatusPayload,
+} from "@/types";
 
 export const useGetAdminStatsSuspense = () => {
   return useSuspenseQuery({
@@ -101,6 +107,50 @@ export const useUpdateUserStatus = () => {
         error?.data?.message ||
         error?.message ||
         "Failed to update user status";
+
+      toast.add({
+        title: "Action Failed",
+        description: errorMessage,
+        type: "error",
+      });
+    },
+  });
+};
+
+export const useGetAllAdminCampaignsSuspense = () => {
+  return useSuspenseQuery({
+    queryKey: ["admin-all-campaigns"],
+    queryFn: getAllAdminCampaigns,
+  });
+};
+
+export const useReviewFundCampaign = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: TReviewCampaignPayload;
+    }) => reviewFundCampaign({ id, payload }),
+
+    onSuccess: (data: any) => {
+      toast.add({
+        title: "Campaign Reviewed",
+        description: data?.message || "Campaign status updated successfully",
+        type: "success",
+      });
+      queryClient.invalidateQueries({ queryKey: ["admin-all-campaigns"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["my-campaigns"] });
+      queryClient.invalidateQueries({ queryKey: ["all-campaigns"] });
+    },
+
+    onError: (error: any) => {
+      const errorMessage =
+        error?.data?.message || error?.message || "Failed to review campaign";
 
       toast.add({
         title: "Action Failed",

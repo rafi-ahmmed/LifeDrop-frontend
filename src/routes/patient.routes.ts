@@ -15,10 +15,6 @@ export const patientRoutes = [
   },
   {
     title: "App settings",
-    items: [
-      { title: "Routing", url: "#" },
-      { title: "Data Fetching", url: "#" },
-      { title: "Rendering", url: "#" },
-    ],
+    items: [{ title: "Profile", url: `${prefix}/profile` }],
   },
 ];
