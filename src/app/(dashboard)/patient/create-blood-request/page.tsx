@@ -5,7 +5,14 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
+import type { Metadata } from "next";
 import { CreateBloodRequestForm } from "@/components/from/create-blood-request-form";
+
+export const metadata: Metadata = {
+  title: "Create Blood Request",
+  description:
+    "Submit an emergency blood requisition and find matching donors near you.",
+};
 
 export default function CreateBloodRequestPage() {
   return (

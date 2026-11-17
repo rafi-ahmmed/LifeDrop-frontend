@@ -1,7 +1,14 @@
 import { ShieldAlert } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { AdminOverview } from "@/components/modules/admin/overview/admin-overview";
 import { AdminOverviewSkeleton } from "@/components/modules/admin/overview/admin-overview-skeleton";
+
+export const metadata: Metadata = {
+  title: "Admin Overview",
+  description:
+    "Platform analytics for donors, patients, blood requests and fundraising campaigns.",
+};
 
 export default function AdminDashboardPage() {
   return (

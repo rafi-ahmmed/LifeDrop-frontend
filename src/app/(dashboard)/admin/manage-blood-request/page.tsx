@@ -1,7 +1,14 @@
 import { Droplet } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { AllRequestsSkeleton } from "@/components/modules/admin/manage-blood-request/all-requests-skeleton";
 import { ManageRequestsTable } from "@/components/modules/admin/manage-blood-request/components/manage-requests-table";
+
+export const metadata: Metadata = {
+  title: "Manage Blood Requests",
+  description:
+    "Review, filter, approve or reject incoming blood donation requests from the admin dashboard.",
+};
 
 export default function ManageBloodRequestsPage() {
   return (

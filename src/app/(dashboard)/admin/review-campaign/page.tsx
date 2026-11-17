@@ -1,7 +1,14 @@
 import { HandCoins } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ReviewCampaignsSkeleton } from "@/components/modules/admin/review-campaigns/review-campaigns-skeleton";
 import { ReviewCampaignsTable } from "@/components/modules/admin/review-campaigns/review-campaigns-table";
+
+export const metadata: Metadata = {
+  title: "Review Fund Campaigns",
+  description:
+    "Verify medical documents and approve or reject patient fundraising campaigns.",
+};
 
 export default function ReviewCampaignsPage() {
   return (

@@ -1,18 +1,44 @@
 "use client";
 
-import { FolderOpen } from "lucide-react";
+import { AlertTriangle, FolderOpen, RefreshCw } from "lucide-react";
 import { useGetAllCampaignsSuspense } from "@/hooks";
 import type { TFundCampaign } from "@/types/campaign.type";
 import { AllCampaignCard } from "./all-campaigns-card";
+import { Button } from "@base-ui/react";
 
 const AllCampaignsList = () => {
-  const { data: response } = useGetAllCampaignsSuspense();
+  const { data: response,isError,refetch } = useGetAllCampaignsSuspense();
 
   const campaignsList: TFundCampaign[] = Array.isArray(response?.data)
     ? response.data
     : (response?.data as any)?.campaigns || [];
 
   console.log(response);
+
+  if (isError || !response) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 px-4 text-center bg-card border border-border rounded-3xl space-y-4 max-w-lg mx-auto my-8 shadow-sm">
+        <div className="w-12 h-12 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center">
+          <AlertTriangle className="w-6 h-6" />
+        </div>
+        <div className="space-y-1">
+          <h3 className="text-base font-bold text-foreground">
+            Failed to load campaigns
+          </h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Could not connect to the server. The server might be offline or undergoing maintenance. Please check your connection.
+          </p>
+        </div>
+        <Button
+          onClick={() => refetch()}
+          className="text-xs font-semibold gap-1.5 rounded-xl cursor-pointer"
+        >
+          <RefreshCw className="w-3.5 h-3.5" />
+          <span>Try Again</span>
+        </Button>
+      </div>
+    );
+  }
 
   if (campaignsList.length === 0) {
     return (

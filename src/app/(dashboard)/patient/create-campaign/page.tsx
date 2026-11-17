@@ -1,5 +1,12 @@
 import { FileText, HeartHandshake, ShieldCheck, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
 import { CreateCampaignForm } from "@/components/from/create-campaign-from";
+
+export const metadata: Metadata = {
+  title: "Create Fund Campaign",
+  description:
+    "Launch a verified medical fundraising campaign to get financial support from the community.",
+};
 
 export default function CreateCampaignPage() {
   return (

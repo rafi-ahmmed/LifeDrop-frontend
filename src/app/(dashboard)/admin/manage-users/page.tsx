@@ -1,7 +1,14 @@
 import { Users } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ManageUsersSkeleton } from "@/components/modules/admin/manage-users/manage-users-skeleton";
 import { ManageUsersTable } from "@/components/modules/admin/manage-users/manage-users-table";
+
+export const metadata: Metadata = {
+  title: "Manage Users",
+  description:
+    "View donor and patient accounts and manage account access from the LifeDrop admin dashboard.",
+};
 
 export default function ManageUsersPage() {
   return (

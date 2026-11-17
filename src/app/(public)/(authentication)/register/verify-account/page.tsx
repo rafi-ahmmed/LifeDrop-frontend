@@ -6,10 +6,17 @@ import {
   KeyRound,
   ShieldCheck,
 } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import Logo from "@/assets/svg/Logo";
 import VerifyAccountForm from "@/components/from/registration/verify-account-from";
+
+export const metadata: Metadata = {
+  title: "Verify Your Account",
+  description:
+    "Verify your LifeDrop account with the one-time code sent to your email address.",
+};
 
 export default function VerifyAccountPage() {
   return (

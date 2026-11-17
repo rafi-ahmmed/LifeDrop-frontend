@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import { AboutHero } from "@/components/modules/about-us/about-hero";
 import { AdvisoryTeam } from "@/components/modules/about-us/advisory-team";
 import { CoreValues } from "@/components/modules/about-us/core-values";
 import { OurStory } from "@/components/modules/about-us/our-story";
 import { PartnerNetwork } from "@/components/modules/about-us/partner-network";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Learn about LifeDrop's mission, our story, core values and the medical advisory board behind our blood donation network.",
+};
 
 export default function AboutPage() {
   return (

@@ -1,8 +1,15 @@
 import { HeartHandshake, ShieldCheck } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import Logo from "@/assets/svg/Logo";
 import { LoginForm } from "@/components/from/login-form";
+
+export const metadata: Metadata = {
+  title: "Sign In",
+  description:
+    "Sign in to your LifeDrop account to manage blood requests, donations and fundraising campaigns.",
+};
 
 export default function LoginPage() {
   return (

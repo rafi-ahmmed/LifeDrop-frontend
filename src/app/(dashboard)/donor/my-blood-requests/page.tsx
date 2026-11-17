@@ -1,7 +1,14 @@
 import { HeartHandshake } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { DonorRequestsSkeletonDonor } from "@/components/modules/donor/my-blood-request/donor-requests-skeleton-donor";
 import { DonorRequestsTable } from "@/components/modules/donor/my-blood-request/donor-requests-table";
+
+export const metadata: Metadata = {
+  title: "Incoming Blood Requests",
+  description:
+    "Review urgent blood donation requests and respond to patients who need your help.",
+};
 
 export default function MyBloodRequestsPage() {
   return (

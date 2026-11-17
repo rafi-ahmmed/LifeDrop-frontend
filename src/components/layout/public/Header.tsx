@@ -2,7 +2,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Droplet, LogOut, Menu } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Logo from "@/assets/svg/Logo";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,9 +16,11 @@ import { toast } from "@/components/ui/toast";
 import { useGetMe, useLogout } from "@/hooks";
 import type { UserRole } from "@/types";
 import { ThemeToggle } from "./Theme-toggle";
+import HeaderSkeleton from "./header-skeleton";
 
 export default function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const routes = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
@@ -63,6 +65,9 @@ export default function Header() {
     });
   };
 
+  if(isLoading) return <HeaderSkeleton/>
+  
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
       <div className="container mx-auto  px-4 md:px-4 lg:px-0">
@@ -72,19 +77,22 @@ export default function Header() {
 
           {/* 2. Middle: Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-            {routes.map((route) => (
-              <Link
-                key={route.name}
-                href={route.href}
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-              >
-                {route.name}
-              </Link>
-            ))}
+            {
+            
+            routes.map((route) => {
+              const isActive = pathname === route.href
+              return(
+                  <Link
+                  key={route.name}
+                  href={route.href}
+                  className={`${isActive && "text-primary"} text-sm font-medium text-muted-foreground hover:text-primary transition-colors`}>
+                  {route.name}
+                </Link>
+              )
+            })
+            }
 
-            {isLoading ? (
-              <Skeleton className="h-5 w-15 rounded-md" />
-            ) : (
+            { 
               role && (
                 <Link
                   className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
@@ -93,22 +101,13 @@ export default function Header() {
                   Dashboard
                 </Link>
               )
-            )}
-            
-
-
-
+            }
           </nav>
 
           {/* 3. Right: Theme Toggle Icon, Login Button & Mobile Sheet Trigger */}
           <div className="flex items-center gap-2 sm:gap-4">
             {/* Theme Toggle Icon (Right Side) */}
             <ThemeToggle />
-
-            {isLoading && (
-              <Skeleton className="hidden md:block lg:block items-center justify-center px-9 py-4 text-sm font-medium  text-grey shadow-sm" />
-            )}
-
             {/* Desktop Login Button */}
             {!isLoading && !user && (
               <Button
@@ -139,7 +138,7 @@ export default function Header() {
               {/* Sheet Content opens from Right */}
               <SheetContent
                 side="right"
-                className="w-[300px] sm:w-[350px] bg-background border-border"
+                className="w-75 sm:w-87.5 bg-background border-border"
               >
                 <div className="flex flex-col h-full py-6">
                   {/* Sheet Header / Logo inside mobile drawer */}
@@ -181,17 +180,6 @@ export default function Header() {
                       >
                         Login
                       </SheetClose>
-                    )}
-
-                    {user && !isLoading && (
-                      <Button
-                        onClick={handleLogout}
-                        variant="ghost"
-                        className="w-full inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/15 hover:bg-red-500/25 text-red-500 font-medium text-sm transition-colors"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        <span>Logout</span>
-                      </Button>
                     )}
                   </div>
                 </div>

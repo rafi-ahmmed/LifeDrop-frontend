@@ -67,17 +67,16 @@ export function LoginForm({
           type: "success",
         });
       },
-      onError: (err) => {
-        const message =
-          err instanceof FetchError
-            ? err.data?.message || err.message
-            : "Something went wrong";
-        toast.add({
-          title: message,
-          description: "Please try again",
-          type: "error",
-        });
-      },
+      onError: (error: any) => {
+      const errorMessage =
+        error?.data?.message || error?.message || "Something went wrong";
+
+      toast.add({
+        title: "Action Failed",
+        description: errorMessage,
+        type: "error",
+      });
+    },
     });
   };
 
@@ -123,18 +122,16 @@ export function LoginForm({
           type: "success",
         });
       },
-      onError: (err) => {
-        console.log(err);
-        const message =
-          err instanceof FetchError
-            ? err.data?.message || err.message
-            : "Something went wrong";
-        toast.add({
-          title: message,
-          description: "Please try again",
-          type: "error",
-        });
-      },
+      onError: (error: any) => {
+      const errorMessage =
+        error?.data?.message || error?.message || "Something went wrong";
+
+      toast.add({
+        title: "Action Failed",
+        description: errorMessage,
+        type: "error",
+      });
+    },
     });
   };
 

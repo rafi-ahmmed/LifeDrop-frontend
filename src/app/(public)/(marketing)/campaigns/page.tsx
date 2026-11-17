@@ -1,7 +1,14 @@
 import { HeartHandshake, ShieldCheck, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import AllCampaignsList from "@/components/modules/campaigns/all-campaigns-list";
 import { AllCampaignsSkeleton } from "@/components/modules/campaigns/all-campaigns-skeleton";
+
+export const metadata: Metadata = {
+  title: "Fundraising Campaigns",
+  description:
+    "Explore verified medical fundraising campaigns and help patients in need through LifeDrop.",
+};
 
 export default function CampaignsPage() {
   return (

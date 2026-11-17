@@ -1,4 +1,5 @@
 import { ArrowLeft, Users } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { DonorFilterSwitches } from "@/components/modules/patient/matching-donors/donor-filter-switches";
@@ -10,6 +11,12 @@ import type { TDonorMatchingParams } from "@/types";
 type MatchingDonorsPageProps = {
   params: Promise<{ requestId: string }>;
   searchParams: Promise<{ exactDistrict?: string; exactLocation?: string }>;
+};
+
+export const metadata: Metadata = {
+  title: "Matching Donors",
+  description:
+    "Browse donors matched to your blood request and filter them by district and location.",
 };
 
 export default async function MatchingDonorsPage({
