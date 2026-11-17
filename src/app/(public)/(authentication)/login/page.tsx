@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
+  
   return (
     <div className="grid min-h-svh lg:grid-cols-2 bg-background text-foreground">
       {/* Left Column: Form & Brand Logo */}

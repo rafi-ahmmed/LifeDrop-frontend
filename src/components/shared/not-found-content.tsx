@@ -1,25 +1,17 @@
-import { ArrowLeft, Droplets, SearchX } from "lucide-react";
+import { ArrowLeft, Droplets, Home, SearchX } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import NotFoundBackButton from "./not-found-back-button";
 
 type NotFoundContentProps = {
   title?: string;
   description?: string;
-  /** Optional in-app destination shown next to the home button. */
-  secondaryHref?: string;
-  secondaryLabel?: string;
 };
 
-/**
- * Shared 404 UI. Kept as a Server Component so it is safe to render from the
- * root not-found.tsx (which Next.js sends with every route).
- */
 export default function NotFoundContent({
   title = "Page not found",
   description = "The page you are looking for does not exist, has been moved, or is temporarily unavailable.",
-  secondaryHref,
-  secondaryLabel = "Go back",
 }: NotFoundContentProps) {
   return (
     <main className="flex min-h-[70vh] w-full items-center justify-center px-4 py-16">
@@ -48,27 +40,16 @@ export default function NotFoundContent({
         </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <NotFoundBackButton />
           <Button
             nativeButton={false}
             render={<Link href="/" />}
             size="sm"
             className="h-9 gap-1.5 rounded-xl text-xs"
           >
-            <ArrowLeft className="size-4" />
+            <Home className="size-4" />
             Back to Home
           </Button>
-
-          {secondaryHref && secondaryHref !== "/" ? (
-            <Button
-              nativeButton={false}
-              render={<Link href={secondaryHref} />}
-              variant="outline"
-              size="sm"
-              className="h-9 rounded-xl text-xs"
-            >
-              {secondaryLabel}
-            </Button>
-          ) : null}
         </div>
       </div>
     </main>

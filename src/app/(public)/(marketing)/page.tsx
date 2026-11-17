@@ -7,6 +7,7 @@ import { ImpactStatsSection } from "@/components/modules/home-page/impact-stats-
 import { TestimonialsFaqSection } from "@/components/modules/home-page/testimonials-faq-section";
 
 export default function HomePage() {
+  // throw new Error("jdfjkdjkdfk");
   return (
     <div className="flex flex-col min-h-screen">
       {/* 1. Hero Section with Live Emergency Board */}

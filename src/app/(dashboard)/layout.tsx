@@ -1,26 +1,30 @@
-"use client"
-import React, { type ReactNode } from "react";
+"use client";
+import type { ReactNode } from "react";
 import AuthGuard from "@/components/auth/auth-guard";
-import { useUserAccessGuard } from "@/hooks";
-import { AccountRestrictedModal } from "@/components/dashboard/account-restricted-modal";
 import { DashboardSkeleton } from "@/components/auth/dashboard-skeleton";
+import { AccountRestrictedModal } from "@/components/dashboard/account-restricted-modal";
+import DashboardShell from "@/components/dashboard/dashboard-shell";
+import { useUserAccessGuard } from "@/hooks";
 
 const layout = ({ children }: { children: ReactNode }) => {
-  const {isRestricted,restrictionReason,isPending} = useUserAccessGuard()
+  const { user, isRestricted, restrictionReason, isPending } =
+    useUserAccessGuard();
 
-  if(isPending){
-    return <DashboardSkeleton/>
+  if (isPending || !user) {
+    return <DashboardSkeleton />;
   }
 
-  if(isRestricted){
-    return  <AccountRestrictedModal open={isRestricted} reason={restrictionReason} />
+  if (isRestricted) {
+    return (
+      <AccountRestrictedModal open={isRestricted} reason={restrictionReason} />
+    );
   }
 
-  
-  return <AuthGuard>{children}</AuthGuard>;
-      
-     
-
+  return (
+    <AuthGuard>
+      <DashboardShell role={user.role}>{children}</DashboardShell>
+    </AuthGuard>
+  );
 };
 
 export default layout;
