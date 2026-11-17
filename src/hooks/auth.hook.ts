@@ -53,3 +53,20 @@ export const useGetMeSuspense = () => {
     retry: false,
   });
 };
+
+export const useUserAccessGuard = () => {
+  const { data: response,isPending } = useGetMe();
+  const user = response?.data;
+
+  const isBlocked = user?.status === "BLOCKED"; 
+  const isUnverified = !user?.isVerified;
+
+  return {
+    user,
+    isPending,
+    isRestricted: isBlocked || isUnverified,
+    restrictionReason: isBlocked 
+      ? "Your account has been blocked by the administrator." 
+      : "Your account is unverified.",
+  };
+};

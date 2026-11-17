@@ -28,7 +28,6 @@ export default function Header() {
   const dashboardRoutes: Record<UserRole, string> = {
     ADMIN: "admin",
     SUPER_ADMIN: "admin",
-    HOSPITAL: "hospital",
     DONOR: "donor",
     PATIENT: "patient",
   };
@@ -38,7 +37,8 @@ export default function Header() {
   const { mutate: logout } = useLogout();
   const queryClient = useQueryClient();
 
-  const role: UserRole = !!user?.data && user.data.role;
+  const role = !!user?.data && user.data.role;
+  console.log("role user ==",role)
 
   const handleLogout = () => {
     logout(undefined, {

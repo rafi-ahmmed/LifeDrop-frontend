@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
 import { useGetMe } from "@/hooks";
-import AuthLoading from "./auth-loading";
 import { DashboardSkeleton } from "./dashboard-skeleton";
 
 const AuthGuard = ({ children }: { children: ReactNode }) => {

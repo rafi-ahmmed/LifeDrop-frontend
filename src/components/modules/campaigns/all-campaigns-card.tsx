@@ -12,10 +12,12 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useGetMe } from "@/hooks/auth.hook";
 import type { TFundCampaign } from "@/types/campaign.type";
 import { CampaignDetailsModal } from "./campaign-details-modal";
 import { DonateModal } from "./donate-modal";
+import { TUserItem } from "@/types";
+import { toast } from "@/components/ui/toast";
+import { useGetMe, useUserAccessGuard } from "@/hooks";
 
 interface AllCampaignCardProps {
   campaign: TFundCampaign;
@@ -24,15 +26,26 @@ interface AllCampaignCardProps {
 export const AllCampaignCard = ({ campaign }: AllCampaignCardProps) => {
   const router = useRouter();
   const { data: userResponse } = useGetMe();
+  const {isRestricted,restrictionReason} = useUserAccessGuard()
+  const user:TUserItem | undefined = userResponse?.data
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isDonateOpen, setIsDonateOpen] = useState(false);
 
   const handleDonateClick = () => {
-    if (!userResponse?.data) {
+    if (!user) {
       router.push("/login");
       return;
     }
+    if (isRestricted) {
+      toast.add({
+        title: "Action Restricted",
+        description: `Cannot donate. ${restrictionReason}`,
+        type: "error",
+      });
+      return;
+    }
+
     setIsDetailsOpen(false);
     setIsDonateOpen(true);
   };

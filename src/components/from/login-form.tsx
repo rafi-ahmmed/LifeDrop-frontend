@@ -45,7 +45,7 @@ export function LoginForm({
   } = useForm<LoginInput>({
     defaultValues: {
       email: "",
-      password: "",
+      password: "@123Aa",
     },
     resolver: zodResolver(loginZodSchema),
     mode: "onChange",

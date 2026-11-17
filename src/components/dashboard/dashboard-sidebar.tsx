@@ -21,7 +21,6 @@ import type { SidebarItems } from "@/types/sidebar.type";
 const sidebarRoutes: Record<UserRole, SidebarItems> = {
   ADMIN: adminRoutes,
   SUPER_ADMIN: adminRoutes,
-  HOSPITAL: adminRoutes,
   DONOR: donorRoutes,
   PATIENT: patientRoutes,
 };
