@@ -27,6 +27,7 @@ export const getMyCampaigns = () => {
   return apiClient("/fund-campaigns/my-campaigns");
 };
 
+// ? For campign page
 export const getAllCampaigns = () => {
   return apiClient("/fund-campaigns/all");
 };

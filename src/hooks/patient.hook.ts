@@ -1,16 +1,17 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { getPatientStats } from "@/api/patient.api";
+import { PATIENT_QUERY_KEYS } from "@/lib/tanstack-query/query-keys";
 
 export const useGetPatientStats = () => {
   return useQuery({
-    queryKey: ["patient-stats"],
+    queryKey: [PATIENT_QUERY_KEYS.PATIENT_STATS],
     queryFn: getPatientStats,
   });
 };
 
 export const useGetPatientStatsSuspense = () => {
   return useSuspenseQuery({
-    queryKey: ["patient-stats"],
+    queryKey: [PATIENT_QUERY_KEYS.PATIENT_STATS],
     queryFn: getPatientStats,
   });
 };

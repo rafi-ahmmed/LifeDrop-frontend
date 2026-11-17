@@ -7,6 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/toast";
 import { useMatchingDonorSuspense, useSendDonorRequests } from "@/hooks";
+import {
+  ADMIN_QUERY_KEYS,
+  DONOR_QUERY_KEYS,
+  PATIENT_QUERY_KEYS,
+} from "@/lib/tanstack-query/query-keys";
 import type { TDonorMatchingParams, TMatchingDonorsResponse } from "@/types";
 import { MatchingDonorCard } from "./matching-donor-card";
 
@@ -43,12 +48,22 @@ export function MatchingDonorList({
             });
             return;
           }
-          queryClient.invalidateQueries({ queryKey: ["matched-donor"] });
-          queryClient.invalidateQueries({ queryKey: ["my-donor-requests"] });
-          queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
           queryClient.invalidateQueries({
-            queryKey: ["donor's-donor-requests"],
+            queryKey: [PATIENT_QUERY_KEYS.PATIENT_MATCHING_DONOR_RES],
           });
+          queryClient.invalidateQueries({
+            queryKey: [PATIENT_QUERY_KEYS.PATIENT_DONOR_REQ],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [ADMIN_QUERY_KEYS.ADMIN_STATS],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [DONOR_QUERY_KEYS.DONORs_DONOR_REQ],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [DONOR_QUERY_KEYS.DONOR_STATS],
+          });
+
           toast.add({
             title: "Requests Sent!",
             description: `Donor request sent to ${unsentDonorIds.length} donor(s).`,

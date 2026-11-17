@@ -5,6 +5,7 @@ import {
   uploadProfileImage,
 } from "@/api";
 import { toast } from "@/components/ui/toast";
+import { AUTH_KEYS } from "@/lib/tanstack-query/query-keys";
 import type { TUpdateProfilePayload } from "@/types";
 
 export const useUploadProfileImage = () => {
@@ -18,7 +19,7 @@ export const useUploadProfileImage = () => {
         description: data?.message || "Profile picture updated successfully",
         type: "success",
       });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: [AUTH_KEYS.CURRENT_USER] });
     },
     onError: (error: any) => {
       toast.add({
@@ -43,7 +44,7 @@ export const useUpdatePatientProfile = () => {
         description: data?.message || "Patient details updated successfully",
         type: "success",
       });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: [AUTH_KEYS.CURRENT_USER] });
     },
     onError: (error: any) => {
       toast.add({
@@ -67,7 +68,7 @@ export const useUpdateDonorProfile = () => {
         description: data?.message || "Donor details updated successfully",
         type: "success",
       });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: [AUTH_KEYS.CURRENT_USER] });
     },
     onError: (error: any) => {
       toast.add({

@@ -12,6 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateCampaign, useGetCampaigns } from "@/hooks";
+import {
+  ADMIN_QUERY_KEYS,
+  PATIENT_QUERY_KEYS,
+} from "@/lib/tanstack-query/query-keys";
 import { formatFileSize } from "@/utils/formate-file-size";
 import { createCampaignZodSchema } from "@/validation";
 import { Spinner } from "../ui/spinner";
@@ -64,7 +68,15 @@ export function CreateCampaignForm() {
         }
 
         reset();
-        queryClient.invalidateQueries({ queryKey: ["my-campaigns"] });
+        queryClient.invalidateQueries({
+          queryKey: [PATIENT_QUERY_KEYS.PATIENT_CAMPAIGNS],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [ADMIN_QUERY_KEYS.ADMIN_ALL_CAMPAIGNS],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [ADMIN_QUERY_KEYS.ADMIN_STATS],
+        });
 
         toast.add({
           title: res.message || "Campaign Created Successfully",

@@ -1,6 +1,11 @@
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { DonorOverview } from "@/components/modules/donor/overview/donor-overview";
+import { DonorOverviewSkeleton } from "@/components/modules/donor/overview/donor-overview-skeleton";
 
-/** Sends unmatched donor URLs to the single dashboard not-found page. */
-export default function DonorCatchAllPage() {
-  notFound();
+export default function Page() {
+  return (
+    <Suspense fallback={<DonorOverviewSkeleton />}>
+      <DonorOverview />
+    </Suspense>
+  );
 }

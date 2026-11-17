@@ -5,11 +5,15 @@ import {
 } from "@tanstack/react-query";
 import { getMyDonorRequestForDonor, respondToDonorRequest } from "@/api";
 import { toast } from "@/components/ui/toast";
+import {
+  DONOR_QUERY_KEYS,
+  PATIENT_QUERY_KEYS,
+} from "@/lib/tanstack-query/query-keys";
 import type { TRespondPayload } from "@/types";
 
 export const useGetMyDonorRequestForDonorSuspense = () => {
   return useSuspenseQuery({
-    queryKey: ["donor's-donor-requests"],
+    queryKey: [DONOR_QUERY_KEYS.DONORs_DONOR_REQ],
     queryFn: getMyDonorRequestForDonor,
   });
 };
@@ -27,8 +31,12 @@ export const useRespondToDonorRequest = () => {
         type: "success",
       });
 
-      queryClient.invalidateQueries({ queryKey: ["donor's-donor-requests"] });
-      queryClient.invalidateQueries({ queryKey: ["my-donor-requests"] });
+      queryClient.invalidateQueries({
+        queryKey: [DONOR_QUERY_KEYS.DONORs_DONOR_REQ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [PATIENT_QUERY_KEYS.PATIENT_DONOR_REQ],
+      });
     },
     onError: (error: any) => {
       const errorMessage =

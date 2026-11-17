@@ -13,6 +13,10 @@ import {
   sendDonorRequests,
   updateDonorRequestStatus,
 } from "@/api";
+import {
+  DONOR_QUERY_KEYS,
+  PATIENT_QUERY_KEYS,
+} from "@/lib/tanstack-query/query-keys";
 import type { DonorRequestStatusAction, TDonorMatchingParams } from "@/types";
 
 export const useCreateBloodRequest = () => {
@@ -23,14 +27,14 @@ export const useCreateBloodRequest = () => {
 
 export const useGetMyBloodRequests = () => {
   return useQuery({
-    queryKey: ["my-blood-requests"],
+    queryKey: [PATIENT_QUERY_KEYS.PATIENT_BLOOD_REQ],
     queryFn: getMyBloodRequests,
   });
 };
 
 export const useGetMyBloodRequestsSuspense = () => {
   return useSuspenseQuery({
-    queryKey: ["my-blood-requests"],
+    queryKey: [PATIENT_QUERY_KEYS.PATIENT_BLOOD_REQ],
     queryFn: getMyBloodRequests,
   });
 };
@@ -75,14 +79,14 @@ export const useSendDonorRequests = () => {
 
 export const useGetMyDonorRequests = () => {
   return useQuery({
-    queryKey: ["my-donor-requests"],
+    queryKey: [PATIENT_QUERY_KEYS.PATIENT_DONOR_REQ],
     queryFn: getMyDonorRequests,
   });
 };
 
 export const useGetMyDonorRequestsSuspense = () => {
   return useSuspenseQuery({
-    queryKey: ["my-donor-requests"],
+    queryKey: [PATIENT_QUERY_KEYS.PATIENT_DONOR_REQ],
     queryFn: getMyDonorRequests,
   });
 };
@@ -99,10 +103,21 @@ export const useUpdateDonorRequestStatus = () => {
       status: DonorRequestStatusAction;
     }) => updateDonorRequestStatus(donorRequestId, status),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["my-donor-requests"] });
-      queryClient.invalidateQueries({ queryKey: ["my-blood-requests"] });
-      queryClient.invalidateQueries({ queryKey: ["patient-stats"] });
-      queryClient.invalidateQueries({ queryKey: ["donor-stats"] });
+      queryClient.invalidateQueries({
+        queryKey: [PATIENT_QUERY_KEYS.PATIENT_DONOR_REQ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [PATIENT_QUERY_KEYS.PATIENT_BLOOD_REQ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [PATIENT_QUERY_KEYS.PATIENT_STATS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [DONOR_QUERY_KEYS.DONORs_DONOR_REQ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [DONOR_QUERY_KEYS.DONOR_STATS],
+      });
     },
   });
 };

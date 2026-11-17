@@ -1,6 +1,6 @@
 "use client";
 import { useQueryClient } from "@tanstack/react-query";
-import { Droplet, LogOut, Menu } from "lucide-react";
+import { Droplet, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Logo from "@/assets/svg/Logo";
@@ -11,12 +11,12 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/toast";
 import { useGetMe, useLogout } from "@/hooks";
+import { AUTH_KEYS } from "@/lib/tanstack-query/query-keys";
 import type { UserRole } from "@/types";
-import { ThemeToggle } from "./Theme-toggle";
 import HeaderSkeleton from "./header-skeleton";
+import { ThemeToggle } from "./Theme-toggle";
 
 export default function Header() {
   const router = useRouter();
@@ -40,13 +40,13 @@ export default function Header() {
   const queryClient = useQueryClient();
 
   const role = !!user?.data && user.data.role;
-  console.log("role user ==",role)
+  console.log("role user ==", role);
 
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: () => {
         console.log("Logout Successful");
-        queryClient.removeQueries({ queryKey: ["user"] });
+        queryClient.removeQueries({ queryKey: [AUTH_KEYS.CURRENT_USER] });
         toast.add({
           title: "Logout Successful",
           description: "You are now logged out",
@@ -65,8 +65,7 @@ export default function Header() {
     });
   };
 
-  if(isLoading) return <HeaderSkeleton/>
-  
+  if (isLoading) return <HeaderSkeleton />;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
@@ -77,31 +76,27 @@ export default function Header() {
 
           {/* 2. Middle: Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-            {
-            
-            routes.map((route) => {
-              const isActive = pathname === route.href
-              return(
-                  <Link
+            {routes.map((route) => {
+              const isActive = pathname === route.href;
+              return (
+                <Link
                   key={route.name}
                   href={route.href}
-                  className={`${isActive && "text-primary"} text-sm font-medium text-muted-foreground hover:text-primary transition-colors`}>
+                  className={`${isActive && "text-primary"} text-sm font-medium text-muted-foreground hover:text-primary transition-colors`}
+                >
                   {route.name}
                 </Link>
-              )
-            })
-            }
+              );
+            })}
 
-            { 
-              role && (
-                <Link
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-                  href={dashboardRoutes[role]}
-                >
-                  Dashboard
-                </Link>
-              )
-            }
+            {role && (
+              <Link
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                href={dashboardRoutes[role]}
+              >
+                Dashboard
+              </Link>
+            )}
           </nav>
 
           {/* 3. Right: Theme Toggle Icon, Login Button & Mobile Sheet Trigger */}

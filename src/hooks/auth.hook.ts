@@ -7,6 +7,7 @@ import {
   userLogin,
   verifyEmail,
 } from "@/api";
+import { AUTH_KEYS } from "@/lib/tanstack-query/query-keys";
 
 export const useLogin = () => {
   return useMutation({
@@ -40,7 +41,7 @@ export const useLogout = () => {
 
 export const useGetMe = () => {
   return useQuery({
-    queryKey: ["user"],
+    queryKey: [AUTH_KEYS.CURRENT_USER],
     queryFn: getMe,
     retry: false,
   });
@@ -48,25 +49,25 @@ export const useGetMe = () => {
 
 export const useGetMeSuspense = () => {
   return useSuspenseQuery({
-    queryKey: ["user"],
+    queryKey: [AUTH_KEYS.CURRENT_USER],
     queryFn: getMe,
     retry: false,
   });
 };
 
 export const useUserAccessGuard = () => {
-  const { data: response,isPending } = useGetMe();
+  const { data: response, isPending } = useGetMe();
   const user = response?.data;
 
-  const isBlocked = user?.status === "BLOCKED"; 
+  const isBlocked = user?.status === "BLOCKED";
   const isUnverified = !user?.isVerified;
 
   return {
     user,
     isPending,
     isRestricted: isBlocked || isUnverified,
-    restrictionReason: isBlocked 
-      ? "Your account has been blocked by the administrator." 
+    restrictionReason: isBlocked
+      ? "Your account has been blocked by the administrator."
       : "Your account is unverified.",
   };
 };

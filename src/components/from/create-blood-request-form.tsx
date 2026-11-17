@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { FetchError } from "ofetch";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import type z from "zod";
@@ -19,6 +20,10 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/toast";
 import { useCreateBloodRequest } from "@/hooks";
+import {
+  ADMIN_QUERY_KEYS,
+  PATIENT_QUERY_KEYS,
+} from "@/lib/tanstack-query/query-keys";
 import { createBloodRequestZodSchema } from "@/validation";
 
 type BloodRequestInput = z.input<typeof createBloodRequestZodSchema>;
@@ -26,6 +31,7 @@ type BloodRequestPayload = z.output<typeof createBloodRequestZodSchema>;
 
 export function CreateBloodRequestForm() {
   const { mutate: createBloodRequest, isPending } = useCreateBloodRequest();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -62,8 +68,14 @@ export function CreateBloodRequestForm() {
           });
           return;
         }
-
         reset();
+
+        queryClient.invalidateQueries({
+          queryKey: [PATIENT_QUERY_KEYS.PATIENT_BLOOD_REQ],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [ADMIN_QUERY_KEYS.ADMIN_BLOOD_REQs],
+        });
 
         toast.add({
           title: res.message || "Blood Request Created Successfully",

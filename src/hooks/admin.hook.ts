@@ -13,6 +13,12 @@ import {
   updateUserStatus,
 } from "@/api";
 import { toast } from "@/components/ui/toast";
+import {
+  ADMIN_QUERY_KEYS,
+  AUTH_KEYS,
+  PATIENT_QUERY_KEYS,
+  PUBLIC_KEYS,
+} from "@/lib/tanstack-query/query-keys";
 import type {
   TReviewCampaignPayload,
   TUpdateStatusPayload,
@@ -21,14 +27,14 @@ import type {
 
 export const useGetAdminStatsSuspense = () => {
   return useSuspenseQuery({
-    queryKey: ["admin-stats"],
+    queryKey: [ADMIN_QUERY_KEYS.ADMIN_STATS],
     queryFn: getAdminStats,
   });
 };
 
 export const useGetBloodRequestsSuspense = (queryString: string) => {
   return useSuspenseQuery({
-    queryKey: ["blood-requests", queryString],
+    queryKey: [ADMIN_QUERY_KEYS.ADMIN_BLOOD_REQs, queryString],
     queryFn: () => getAllBloodRequests(queryString),
   });
 };
@@ -45,7 +51,7 @@ export const useUpdateBloodRequestStatus = () => {
       payload: TUpdateStatusPayload;
     }) => updateBloodRequestStatus({ id, payload }),
 
-    onSuccess: (data: any) => {
+    onSuccess: (data) => {
       toast.add({
         title: "Status Updated",
         description:
@@ -53,8 +59,15 @@ export const useUpdateBloodRequestStatus = () => {
         type: "success",
       });
 
-      queryClient.invalidateQueries({ queryKey: ["my-blood-requests"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+      queryClient.invalidateQueries({
+        queryKey: [PATIENT_QUERY_KEYS.PATIENT_BLOOD_REQ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [PATIENT_QUERY_KEYS.PATIENT_STATS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [ADMIN_QUERY_KEYS.ADMIN_STATS],
+      });
     },
 
     onError: (error: any) => {
@@ -74,7 +87,7 @@ export const useUpdateBloodRequestStatus = () => {
 
 export const useGetAllUsersSuspense = () => {
   return useSuspenseQuery({
-    queryKey: ["admin-users"],
+    queryKey: [ADMIN_QUERY_KEYS.ADMIN_ALL_USERS],
     queryFn: getAllUsers,
   });
 };
@@ -97,9 +110,13 @@ export const useUpdateUserStatus = () => {
         description: data?.message || "User status updated successfully",
         type: "success",
       });
-      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({
+        queryKey: [ADMIN_QUERY_KEYS.ADMIN_ALL_USERS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [ADMIN_QUERY_KEYS.ADMIN_STATS],
+      });
+      queryClient.invalidateQueries({ queryKey: [AUTH_KEYS.CURRENT_USER] });
     },
 
     onError: (error: any) => {
@@ -119,7 +136,7 @@ export const useUpdateUserStatus = () => {
 
 export const useGetAllAdminCampaignsSuspense = () => {
   return useSuspenseQuery({
-    queryKey: ["admin-all-campaigns"],
+    queryKey: [ADMIN_QUERY_KEYS.ADMIN_ALL_CAMPAIGNS],
     queryFn: getAllAdminCampaigns,
   });
 };
@@ -142,10 +159,16 @@ export const useReviewFundCampaign = () => {
         description: data?.message || "Campaign status updated successfully",
         type: "success",
       });
-      queryClient.invalidateQueries({ queryKey: ["admin-all-campaigns"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
-      queryClient.invalidateQueries({ queryKey: ["my-campaigns"] });
-      queryClient.invalidateQueries({ queryKey: ["all-campaigns"] });
+      queryClient.invalidateQueries({
+        queryKey: [ADMIN_QUERY_KEYS.ADMIN_ALL_CAMPAIGNS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [ADMIN_QUERY_KEYS.ADMIN_STATS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [PATIENT_QUERY_KEYS.PATIENT_CAMPAIGNS],
+      });
+      queryClient.invalidateQueries({ queryKey: [PUBLIC_KEYS.ALL_CAMPAIGNS] });
     },
 
     onError: (error: any) => {

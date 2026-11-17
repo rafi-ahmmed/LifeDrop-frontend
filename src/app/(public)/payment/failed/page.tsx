@@ -8,27 +8,21 @@ import {
   XCircle,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function FailedPage() {
   return (
     <div className="min-h-[85vh] flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
-      {/* ব্যাকগ্রাউন্ড গ্লোয়িং এফেক্ট */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* মেইন ফেইল্ড কার্ড */}
       <div className="bg-card border border-zinc-200 dark:border-zinc-800 rounded-3xl max-w-md w-full p-8 shadow-xl text-center space-y-6 relative z-10 overflow-hidden">
-        {/* টপ কালারফুল এরর এক্সেন্ট লাইন */}
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-rose-500 via-red-500 to-rose-500" />
 
-        {/* এরর আইকন */}
         <div className="mx-auto w-20 h-20 rounded-full bg-rose-500/10 flex items-center justify-center relative">
           <div className="absolute inset-0 rounded-full bg-rose-500/20 animate-ping opacity-20" />
           <XCircle className="w-11 h-11 text-rose-500" />
         </div>
 
-        {/* শিরোনাম ও মেসেজ */}
         <div className="space-y-2">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-semibold">
             <ShieldAlert className="w-3.5 h-3.5" />
@@ -45,7 +39,6 @@ export default function FailedPage() {
           </p>
         </div>
 
-        {/* ছোট ইনফো ও সাপোর্ট বক্স */}
         <div className="bg-muted/50 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl p-4 flex items-center justify-between text-left">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-rose-500/10 text-rose-500 flex items-center justify-center shrink-0">
@@ -65,7 +58,6 @@ export default function FailedPage() {
           </span>
         </div>
 
-        {/* দুটি অ্যাকশন বাটন (replace সহ) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
           <Button
             nativeButton={false}
