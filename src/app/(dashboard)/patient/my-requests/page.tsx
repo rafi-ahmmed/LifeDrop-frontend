@@ -5,7 +5,9 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { MyRequestList } from "@/components/modules/patient/my-requests/my-request-list";
 import { MyRequestSkeleton } from "@/components/modules/patient/my-requests/my-request-skeleton";
+import { ReloadButton } from "@/components/shared/reload-button";
 import { Button } from "@/components/ui/button";
+import { PATIENT_QUERY_KEYS } from "@/lib/tanstack-query/query-keys";
 
 export default function MyBloodRequestsPage() {
   return (
@@ -31,14 +33,18 @@ export default function MyBloodRequestsPage() {
           </div>
         </div>
 
-        <Button
-          nativeButton={false}
-          render={<Link href="/patient/create-blood-request" />}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm gap-2"
-        >
-          <PlusCircle className="w-4 h-4" />
-          <span>New Blood Request</span>
-        </Button>
+        <div className="space-x-2.5">
+          <ReloadButton queryKey={[PATIENT_QUERY_KEYS.PATIENT_BLOOD_REQ]} />
+
+          <Button
+            nativeButton={false}
+            render={<Link href="/patient/create-blood-request" />}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm gap-2"
+          >
+            <PlusCircle className="w-4 h-4" />
+            <span>New Blood Request</span>
+          </Button>
+        </div>
       </div>
 
       {/* Content with Suspense */}

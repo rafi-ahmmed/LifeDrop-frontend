@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { FetchError } from "ofetch";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
 import type z from "zod";
@@ -32,7 +33,7 @@ type BloodRequestPayload = z.output<typeof createBloodRequestZodSchema>;
 export function CreateBloodRequestForm() {
   const { mutate: createBloodRequest, isPending } = useCreateBloodRequest();
   const queryClient = useQueryClient();
-
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -59,7 +60,7 @@ export function CreateBloodRequestForm() {
 
   const onSubmit: SubmitHandler<BloodRequestPayload> = (data) => {
     createBloodRequest(data, {
-      onSuccess: (res) => {
+      onSuccess: async (res) => {
         if (!res.success) {
           toast.add({
             title: "Server Failure",
@@ -68,14 +69,17 @@ export function CreateBloodRequestForm() {
           });
           return;
         }
+
         reset();
 
-        queryClient.invalidateQueries({
-          queryKey: [PATIENT_QUERY_KEYS.PATIENT_BLOOD_REQ],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [ADMIN_QUERY_KEYS.ADMIN_BLOOD_REQs],
-        });
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: [PATIENT_QUERY_KEYS.PATIENT_BLOOD_REQ],
+          }),
+          queryClient.invalidateQueries({
+            queryKey: [ADMIN_QUERY_KEYS.ADMIN_BLOOD_REQs],
+          }),
+        ]);
 
         toast.add({
           title: res.message || "Blood Request Created Successfully",
@@ -83,6 +87,8 @@ export function CreateBloodRequestForm() {
             "Your emergency blood request has been submitted. Matching donors will be notified shortly.",
           type: "success",
         });
+
+        router.push("/patient/my-requests");
       },
       onError: (err) => {
         const message =

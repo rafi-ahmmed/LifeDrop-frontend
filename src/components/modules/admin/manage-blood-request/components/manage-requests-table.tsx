@@ -14,13 +14,13 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { ReloadButton } from "@/components/shared/reload-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -46,6 +46,7 @@ import {
   useGetBloodRequestsSuspense,
   useUpdateBloodRequestStatus,
 } from "@/hooks";
+import { ADMIN_QUERY_KEYS } from "@/lib/tanstack-query/query-keys";
 import type { TBloodRequest } from "@/types/blood-request.type";
 import { AllRequestDetailsModal } from "../all-request-details-modal";
 import { AllRequestsSkeleton } from "../all-requests-skeleton";
@@ -227,6 +228,10 @@ export const ManageRequestsTable = () => {
             <span>Reset</span>
           </Button>
         )}
+        <ReloadButton
+          queryKey={[ADMIN_QUERY_KEYS.ADMIN_BLOOD_REQs]}
+          exact={false}
+        />
       </div>
 
       {isPending ? (
@@ -272,7 +277,8 @@ export const ManageRequestsTable = () => {
                   const isLocked =
                     req.status === "FULFILLED" ||
                     req.status === "CANCELLED" ||
-                    req.status === "MATCHING";
+                    req.status === "MATCHING" ||
+                    req.status === "APPROVED";
 
                   return (
                     <TableRow
@@ -399,7 +405,6 @@ export const ManageRequestsTable = () => {
         </div>
       )}
 
-      
       {meta && meta.total > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
           <p className="text-xs text-muted-foreground">
@@ -478,7 +483,6 @@ export const ManageRequestsTable = () => {
         </div>
       )}
 
-      
       <AllRequestDetailsModal
         request={selectedRequest}
         open={!!selectedRequest}
