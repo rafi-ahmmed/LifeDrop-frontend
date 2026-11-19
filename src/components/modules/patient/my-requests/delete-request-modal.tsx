@@ -16,6 +16,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/toast";
 import { formatBloodGroup } from "@/config/blood-request-status";
 import { useDeleteBloodRequest } from "@/hooks/blood-request.hook";
+import {
+  ADMIN_QUERY_KEYS,
+  PATIENT_QUERY_KEYS,
+} from "@/lib/tanstack-query/query-keys";
 import type { TBloodRequest } from "@/types/blood-request.type";
 
 interface DeleteRequestModalProps {
@@ -37,8 +41,15 @@ export function DeleteRequestModal({
   const handleDelete = () => {
     deleteRequest(request.id, {
       onSuccess: (res: any) => {
-        queryClient.invalidateQueries({ queryKey: ["my-blood-requests"] });
-        queryClient.invalidateQueries({ queryKey: ["patient-stats"] });
+        queryClient.invalidateQueries({
+          queryKey: [PATIENT_QUERY_KEYS.PATIENT_BLOOD_REQ],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [PATIENT_QUERY_KEYS.PATIENT_STATS],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [ADMIN_QUERY_KEYS.ADMIN_BLOOD_REQs],
+        });
         onOpenChange(false);
         toast.add({
           title: res?.message || "Blood Request Deleted",

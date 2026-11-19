@@ -2,7 +2,6 @@
 
 import {
   AlertCircle,
-  Building2,
   Calendar,
   Check,
   CheckCircle2,
@@ -78,7 +77,8 @@ export function PaymentDetailsModal({
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
-  const gateway = payment.gatewayResponse || {};
+
+  const gateway = (payment.gatewayResponse as Record<string, any>) || {};
   const formattedAmount = Number(payment.amount || 0).toLocaleString();
 
   return (
@@ -125,55 +125,73 @@ export function PaymentDetailsModal({
 
           {/* Transaction Metadata Grid */}
           <div className="p-4 rounded-2xl bg-muted/40 border space-y-3 text-xs">
-            {/* TrxID */}
-            <div className="flex items-center justify-between py-1.5 border-b border-border/60">
-              <span className="text-muted-foreground flex items-center gap-1.5">
-                <Hash className="w-3.5 h-3.5 text-primary" />
-                Transaction ID (TrxID)
-              </span>
-              <div className="flex items-center gap-1.5 font-mono font-bold text-foreground">
-                <span>{payment.trxID || "N/A"}</span>
-                {payment.trxID && (
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(payment.trxID!, "trx")}
-                    className="text-muted-foreground hover:text-primary transition-colors cursor-pointer p-0.5"
-                    title="Copy TrxID"
-                  >
-                    {copiedKey === "trx" ? (
-                      <Check className="w-3.5 h-3.5 text-emerald-500" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
-                  </button>
-                )}
+            {/* TrxID / Bank Tran ID */}
+            {(payment.trxID || payment.bankTranId) && (
+              <div className="flex items-center justify-between py-1.5 border-b border-border/60">
+                <span className="text-muted-foreground flex items-center gap-1.5">
+                  <Hash className="w-3.5 h-3.5 text-primary" />
+                  {payment.trxID ? "Transaction ID (TrxID)" : "Bank Tran ID"}
+                </span>
+                <div className="flex items-center gap-1.5 font-mono font-bold text-foreground">
+                  <span>{payment.trxID || payment.bankTranId}</span>
+                  {(payment.trxID || payment.bankTranId) && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleCopy(
+                          (payment.trxID || payment.bankTranId)!,
+                          "trx",
+                        )
+                      }
+                      className="text-muted-foreground hover:text-primary transition-colors cursor-pointer p-0.5"
+                      title="Copy ID"
+                    >
+                      {copiedKey === "trx" ? (
+                        <Check className="w-3.5 h-3.5 text-emerald-500" />
+                      ) : (
+                        <Copy className="w-3.5 h-3.5" />
+                      )}
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* bKash Payment ID */}
-            {payment.bkashPaymentId && (
+            {/* bKash Payment ID (If available) */}
+            {payment.paymentId && (
               <div className="flex items-center justify-between py-1.5 border-b border-border/60">
                 <span className="text-muted-foreground flex items-center gap-1.5">
                   <Receipt className="w-3.5 h-3.5 text-primary" />
-                  bKash Payment ID
+                  Gateway Payment ID
                 </span>
-                <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold text-foreground truncate max-w-[200px]">
-                  <span className="truncate">{payment.bkashPaymentId}</span>
+                <div className="flex items-center gap-1.5 font-mono text-[11px] font-semibold text-foreground truncate max-w-50">
+                  <span className="truncate">{payment.paymentId}</span>
                   <button
                     type="button"
-                    onClick={() =>
-                      handleCopy(payment.bkashPaymentId!, "bkashId")
-                    }
+                    onClick={() => handleCopy(payment.paymentId!, "paymentId")}
                     className="text-muted-foreground hover:text-primary transition-colors cursor-pointer p-0.5"
                     title="Copy Payment ID"
                   >
-                    {copiedKey === "bkashId" ? (
+                    {copiedKey === "paymentId" ? (
                       <Check className="w-3.5 h-3.5 text-emerald-500" />
                     ) : (
                       <Copy className="w-3.5 h-3.5" />
                     )}
                   </button>
                 </div>
+              </div>
+            )}
+
+            {/* SSLCommerz Card Type */}
+            {payment.cardType && (
+              <div className="flex items-center justify-between py-1.5 border-b border-border/60">
+                <span className="text-muted-foreground flex items-center gap-1.5">
+                  <CreditCard className="w-3.5 h-3.5 text-primary" />
+                  Card / Channel Type
+                </span>
+                <span className="font-semibold uppercase text-foreground">
+                  {payment.cardType}
+                </span>
               </div>
             )}
 
@@ -210,52 +228,59 @@ export function PaymentDetailsModal({
             )}
 
             {/* Campaign Target */}
-            <div className="flex items-center justify-between py-1.5 border-b border-border/60">
-              <span className="text-muted-foreground flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-primary" />
-                Campaign Target
-              </span>
-              <span className="font-semibold text-[11px] text-foreground truncate max-w-[220px]">
-                {payment.campaign?.title ||
-                  `${payment.campaignId.slice(0, 16)}...`}
-              </span>
-            </div>
-
-            {/* Payer Details from Gateway */}
-            {gateway.payerAccount && (
+            {payment.campaign?.title && (
               <div className="flex items-center justify-between py-1.5 border-b border-border/60">
                 <span className="text-muted-foreground flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-primary" />
-                  Payer Account
+                  <FileText className="w-3.5 h-3.5 text-primary" />
+                  Campaign Target
                 </span>
-                <span className="font-semibold text-foreground font-mono">
-                  {String(gateway.payerAccount)}
+                <span className="font-semibold text-[11px] text-foreground truncate max-w-55">
+                  {payment.campaign.title}
                 </span>
               </div>
             )}
 
-            {gateway.merchantInvoiceNumber && (
+            {/* Dynamic Payer Details from Gateway (bKash payerAccount or SSLCommerz card issuer/phone) */}
+            {(gateway.payerAccount ||
+              gateway.cus_phone ||
+              gateway.card_issuer) && (
+              <div className="flex items-center justify-between py-1.5 border-b border-border/60">
+                <span className="text-muted-foreground flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-primary" />
+                  Payer Info
+                </span>
+                <span className="font-semibold text-foreground font-mono">
+                  {String(
+                    gateway.payerAccount ||
+                      gateway.cus_phone ||
+                      gateway.card_issuer,
+                  )}
+                </span>
+              </div>
+            )}
+
+            {/* Merchant Invoice / Reference */}
+            {(gateway.merchantInvoiceNumber || gateway.tran_id) && (
               <div className="flex items-center justify-between py-1.5 border-b border-border/60">
                 <span className="text-muted-foreground flex items-center gap-1.5">
                   <Receipt className="w-3.5 h-3.5 text-primary" />
-                  Merchant Invoice
+                  Invoice / Reference
                 </span>
                 <span className="font-mono text-[11px] text-foreground">
-                  {String(gateway.merchantInvoiceNumber)}
+                  {String(gateway.merchantInvoiceNumber || gateway.tran_id)}
                 </span>
               </div>
             )}
 
             {/* Error Message if Failed/Cancelled */}
-            {gateway.errorMessageEn && (
+            {(gateway.errorMessageEn || gateway.error) && (
               <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 space-y-1">
                 <p className="font-bold flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   Gateway Error:
                 </p>
                 <p className="text-[11px] leading-relaxed">
-                  {String(gateway.errorMessageEn)} (Code:{" "}
-                  {String(gateway.externalCode || "Unknown")})
+                  {String(gateway.errorMessageEn || gateway.error)}
                 </p>
               </div>
             )}

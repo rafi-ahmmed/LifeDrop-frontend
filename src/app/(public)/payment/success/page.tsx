@@ -9,27 +9,17 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  useGetAdminStatsSuspense,
-  useGetAllCampaigns,
-  useGetCampaigns,
-  useGetMyPayments,
-  useGetPatientStats,
-} from "@/hooks";
+import { useGetAllCampaigns, useGetCampaigns, useGetMyPayments } from "@/hooks";
 
 export default function SuccessPage() {
   const { refetch: reloadCampaigns } = useGetCampaigns();
   const { refetch: reloadAllCampaigns } = useGetAllCampaigns();
   const { refetch: reloadPayments } = useGetMyPayments();
-  const { refetch: reloadAdminStats } = useGetAdminStatsSuspense();
-  const { refetch: reloadPatientStats } = useGetPatientStats();
 
   const btnCallback = () => {
     reloadCampaigns();
     reloadAllCampaigns();
     reloadPayments();
-    reloadAdminStats();
-    reloadPatientStats();
   };
   return (
     <div className="min-h-[85vh] flex items-center justify-center p-4 md:p-8 relative overflow-hidden">

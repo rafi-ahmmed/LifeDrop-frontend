@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertCircle, Heart, ShieldCheck, Sparkles } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FetchError } from "ofetch";
 import { useEffect, useState } from "react";
@@ -18,8 +19,16 @@ import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "@/components/ui/toast";
 import { useGetMe } from "@/hooks/auth.hook";
-import { useCreatePaymentByBkash } from "@/hooks/payment.hook";
+import {
+  useCreatePaymentByBkash,
+  useCreatePaymentBySSLCommerz,
+} from "@/hooks/payment.hook";
 import type { TFundCampaign } from "@/types/campaign.type";
+
+import bkashLogo from "../../../../public/bkash-brandmark.svg";
+import sslcommerzLogo from "../../../../public/sslcommerz-brandmark-logo.svg";
+
+type PaymentGateway = "BKASH" | "SSLCOMMERZ";
 
 interface DonateModalProps {
   campaign: TFundCampaign | null;
@@ -37,12 +46,18 @@ export function DonateModal({
   const router = useRouter();
   const { data: userData } = useGetMe();
 
+  const [gateway, setGateway] = useState<PaymentGateway>("BKASH");
   const [amount, setAmount] = useState<string>("1000");
   const [error, setError] = useState<string | null>(null);
 
-  const { mutate: createPayment, isPending } = useCreatePaymentByBkash();
+  const { mutate: createBkashPayment, isPending: isBkashPending } =
+    useCreatePaymentByBkash();
+  const { mutate: createSslPayment, isPending: isSslPending } =
+    useCreatePaymentBySSLCommerz();
 
-  // Reset error when modal opens
+  const isPending = isBkashPending || isSslPending;
+
+  // Reset state/error when modal opens
   useEffect(() => {
     if (open) {
       setError(null);
@@ -55,8 +70,59 @@ export function DonateModal({
   const collected = Number(campaign.collectedAmount) || 0;
   const remaining = Math.max(target - collected, 0);
 
+  const handlePaymentSuccess = (res: any) => {
+    const redirectUrl =
+      res?.data?.paymentUrl || res?.data?.GatewayPageURL || res?.data?.url;
+
+    if (redirectUrl) {
+      const gatewayLabel = gateway === "BKASH" ? "bKash" : "SSLCommerz";
+      toast.add({
+        title: `Redirecting to ${gatewayLabel}`,
+        description: `Please complete your donation securely on the ${gatewayLabel} payment gateway.`,
+        type: "success",
+      });
+      window.location.href = redirectUrl;
+    } else {
+      const msg = res?.message || "Payment URL could not be generated";
+      setError(msg);
+      toast.add({
+        title: "Payment Error",
+        description: msg,
+        type: "error",
+      });
+    }
+  };
+
+  const handlePaymentError = (err: any) => {
+    const isUnauthorized =
+      (err instanceof FetchError &&
+        (err.status === 401 || err.statusCode === 401)) ||
+      err?.statusCode === 401 ||
+      err?.status === 401;
+
+    if (isUnauthorized) {
+      onOpenChange(false);
+      router.push("/login");
+      return;
+    }
+
+    const message =
+      err instanceof FetchError
+        ? err.data?.message || err.message
+        : err?.data?.message ||
+          err?.message ||
+          "Failed to initiate payment. Please try again.";
+
+    setError(message);
+
+    toast.add({
+      title: "Payment Failed",
+      description: message,
+      type: "error",
+    });
+  };
+
   const handlePay = () => {
-    // Check authentication: directly redirect to login without showing any error message
     if (!userData?.data) {
       onOpenChange(false);
       router.push("/login");
@@ -84,63 +150,21 @@ export function DonateModal({
 
     setError(null);
 
-    createPayment(
-      {
-        campaignId: campaign.id,
-        amount: numAmount,
-      },
-      {
-        onSuccess: (res: any) => {
-          if (res?.data?.paymentUrl) {
-            toast.add({
-              title: "Redirecting to bKash",
-              description:
-                "Please complete your donation securely on the bKash payment gateway.",
-              type: "success",
-            });
-            window.location.href = res.data.paymentUrl;
-          } else {
-            const msg = res?.message || "Payment URL could not be generated";
-            setError(msg);
-            toast.add({
-              title: "Payment Error",
-              description: msg,
-              type: "error",
-            });
-          }
-        },
-        onError: (err: any) => {
-          const isUnauthorized =
-            (err instanceof FetchError &&
-              (err.status === 401 || err.statusCode === 401)) ||
-            err?.statusCode === 401 ||
-            err?.status === 401;
+    const payload = {
+      campaignId: campaign.id,
+      amount: numAmount,
+    };
 
-          if (isUnauthorized) {
-            onOpenChange(false);
-            router.push("/login");
-            return;
-          }
+    const callbacks = {
+      onSuccess: handlePaymentSuccess,
+      onError: handlePaymentError,
+    };
 
-          // Extract backend API error message
-          const message =
-            err instanceof FetchError
-              ? err.data?.message || err.message
-              : err?.data?.message ||
-                err?.message ||
-                "Failed to initiate payment. Please try again.";
-
-          // Keep modal open and display the exact error message inside the modal
-          setError(message);
-
-          toast.add({
-            title: "Payment Failed",
-            description: message,
-            type: "error",
-          });
-        },
-      },
-    );
+    if (gateway === "BKASH") {
+      createBkashPayment(payload, callbacks);
+    } else {
+      createSslPayment(payload, callbacks);
+    }
   };
 
   const handleClose = () => {
@@ -157,15 +181,31 @@ export function DonateModal({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-3xl border">
         {/* Top Decorative Gradient */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-pink-500 via-primary to-rose-500" />
+        <div
+          className={`h-1.5 w-full transition-all duration-300 ${
+            gateway === "BKASH"
+              ? "bg-gradient-to-r from-[#E2136E] via-pink-500 to-rose-500"
+              : "bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500"
+          }`}
+        />
 
         <div className="p-6 space-y-5">
           {/* Header */}
           <DialogHeader className="space-y-2 text-left">
             <div className="flex items-center justify-between pr-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-pink-500/10 text-pink-600 dark:text-pink-400 border border-pink-500/20">
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${
+                  gateway === "BKASH"
+                    ? "bg-[#E2136E]/10 text-[#E2136E] border-[#E2136E]/20"
+                    : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"
+                }`}
+              >
                 <Heart className="w-3.5 h-3.5 fill-current" />
-                <span>bKash Secure Donation</span>
+                <span>
+                  {gateway === "BKASH"
+                    ? "bKash Secure Donation"
+                    : "SSLCommerz Gateway"}
+                </span>
               </span>
 
               <span className="text-[11px] text-muted-foreground flex items-center gap-1">
@@ -210,6 +250,102 @@ export function DonateModal({
             </div>
           </div>
 
+          {/* Payment Gateway Selector (bKash vs SSLCommerz) */}
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold">
+              Select Payment Method
+            </Label>
+            <div className="grid grid-cols-2 gap-2.5">
+              {/* bKash Option */}
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={() => {
+                  setGateway("BKASH");
+                  setError(null);
+                }}
+                className={`relative flex items-center justify-between p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+                  gateway === "BKASH"
+                    ? "border-[#E2136E] bg-[#E2136E]/5 ring-2 ring-[#E2136E]/20 shadow-xs"
+                    : "border-border/80 bg-card hover:bg-muted/50 opacity-80 hover:opacity-100"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-9 h-9 rounded-xl bg-white border border-border/60 flex items-center justify-center shrink-0 p-1.5 shadow-2xs">
+                    <Image
+                      src={bkashLogo}
+                      alt="bKash"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-foreground truncate">
+                      bKash
+                    </p>
+                    <p className="text-[10px] text-muted-foreground truncate">
+                      Instant Mobile Pay
+                    </p>
+                  </div>
+                </div>
+                <span
+                  className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
+                    gateway === "BKASH"
+                      ? "border-[#E2136E]"
+                      : "border-muted-foreground/40"
+                  }`}
+                >
+                  {gateway === "BKASH" && (
+                    <span className="w-2 h-2 rounded-full bg-[#E2136E]" />
+                  )}
+                </span>
+              </button>
+
+              {/* SSLCommerz Option */}
+              <button
+                type="button"
+                disabled={isPending}
+                onClick={() => {
+                  setGateway("SSLCOMMERZ");
+                  setError(null);
+                }}
+                className={`relative flex items-center justify-between p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+                  gateway === "SSLCOMMERZ"
+                    ? "border-blue-600 bg-blue-600/5 ring-2 ring-blue-600/20 shadow-xs"
+                    : "border-border/80 bg-card hover:bg-muted/50 opacity-80 hover:opacity-100"
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-9 h-9 rounded-xl bg-white border border-border/60 flex items-center justify-center shrink-0 p-1.5 shadow-2xs">
+                    <Image
+                      src={sslcommerzLogo}
+                      alt="SSLCommerz"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold text-foreground truncate">
+                      SSLCommerz
+                    </p>
+                    <p className="text-[10px] text-muted-foreground truncate">
+                      Cards, Banks & MFS
+                    </p>
+                  </div>
+                </div>
+                <span
+                  className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${
+                    gateway === "SSLCOMMERZ"
+                      ? "border-blue-600"
+                      : "border-muted-foreground/40"
+                  }`}
+                >
+                  {gateway === "SSLCOMMERZ" && (
+                    <span className="w-2 h-2 rounded-full bg-blue-600" />
+                  )}
+                </span>
+              </button>
+            </div>
+          </div>
+
           {/* Amount Selection */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -236,7 +372,7 @@ export function DonateModal({
                     setAmount(String(preset));
                     setError(null);
                   }}
-                  className={`h-9 rounded-xl text-xs font-bold transition-all border ${
+                  className={`h-9 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                     amount === String(preset)
                       ? "bg-primary text-primary-foreground border-primary shadow-xs"
                       : "bg-card hover:bg-muted text-muted-foreground border-border/80"
@@ -292,7 +428,7 @@ export function DonateModal({
               variant="outline"
               disabled={isPending}
               onClick={handleClose}
-              className="rounded-xl h-10 px-5 text-xs font-semibold"
+              className="rounded-xl h-10 px-5 text-xs font-semibold cursor-pointer"
             >
               Cancel
             </Button>
@@ -301,7 +437,11 @@ export function DonateModal({
               type="button"
               disabled={isPending || isAmountInvalid}
               onClick={handlePay}
-              className="rounded-xl h-10 px-6 text-xs font-bold bg-[#E2136E] hover:bg-[#c20f5e] text-white shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`rounded-xl h-10 px-6 text-xs font-bold text-white shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors ${
+                gateway === "BKASH"
+                  ? "bg-[#E2136E] hover:bg-[#c20f5e]"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
               {isPending ? (
                 <>

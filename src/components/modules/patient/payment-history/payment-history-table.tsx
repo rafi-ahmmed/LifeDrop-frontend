@@ -291,9 +291,9 @@ export function PaymentHistoryTable() {
                             </button>
                           )}
                         </div>
-                        {payment.bkashPaymentId && (
+                        {payment.paymentId && (
                           <p className="font-mono text-[10px] text-muted-foreground truncate max-w-[180px]">
-                            ID: {payment.bkashPaymentId}
+                            ID: {payment.paymentId}
                           </p>
                         )}
                       </div>

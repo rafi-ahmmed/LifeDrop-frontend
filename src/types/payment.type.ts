@@ -2,35 +2,17 @@ export type PaymentStatus = "UNPAID" | "PAID" | "FAILED" | "CANCELLED";
 
 export type PaymentMethod = "BKASH" | "SSLCOMMERZ" | "STRIPE";
 
-export interface GatewayResponse {
-  trxId?: string | null;
-  amount?: string;
-  intent?: string;
-  currency?: string;
-  payerType?: string;
-  paymentId?: string;
-  payerAccount?: string;
-  payerReference?: string;
-  transactionStatus?: string;
-  paymentExecuteTime?: string;
-  maxRefundableAmount?: string;
-  merchantInvoiceNumber?: string;
-  externalCode?: string;
-  internalCode?: string;
-  errorMessageBn?: string | null;
-  errorMessageEn?: string | null;
-  [key: string]: unknown;
-}
-
 export interface TPayment {
   id: string;
   amount: string;
-  bkashPaymentId: string | null;
+  paymentId: string | null;
+  cardType: string | null; //for ssl
+  bankTranId: string | null; //For ssl
   trxID: string | null;
   paidAt: string;
   method: PaymentMethod;
   status: PaymentStatus;
-  gatewayResponse?: GatewayResponse | null;
+  gatewayResponse?: JSON | null;
   campaignId: string;
   userId: string;
   campaign?: {

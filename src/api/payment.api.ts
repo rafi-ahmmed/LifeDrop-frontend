@@ -6,7 +6,14 @@ export const getMyPayments = () => {
 };
 
 export const createPaymentByBkash = (payload: CreatePaymentPayload) => {
-  return apiClient("/payments/create-payment", {
+  return apiClient("/payments/create-bkash-payment", {
+    method: "POST",
+    body: payload,
+  });
+};
+
+export const createPaymentBySSLCommerz = (payload: CreatePaymentPayload) => {
+  return apiClient("/payments/create-ssl-payment", {
     method: "POST",
     body: payload,
   });

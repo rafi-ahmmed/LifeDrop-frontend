@@ -159,6 +159,14 @@ export default function Header() {
                         </Link>
                       </SheetClose>
                     ))}
+                    {role && (
+                      <Link
+                        className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+                        href={dashboardRoutes[role]}
+                      >
+                        Dashboard
+                      </Link>
+                    )}
                   </nav>
 
                   {/* Footer Action inside Sheet (Login Button) */}

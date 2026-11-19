@@ -4,12 +4,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 const slots = (count: number) =>
   Array.from({ length: count }, (_, index) => `slot-${index}`);
 
-/**
- * Page-shaped loading skeletons built with the shadcn `Skeleton` primitive.
- * Each export mirrors the layout of the route it is used for so the loading
- * state does not jump when the real content streams in.
- */
-
 function PageHeaderSkeleton({ withBadge = true }: { withBadge?: boolean }) {
   return (
     <div className="relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-zinc-200 bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800">

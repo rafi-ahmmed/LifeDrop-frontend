@@ -60,6 +60,9 @@ export const useUpdateBloodRequestStatus = () => {
       });
 
       queryClient.invalidateQueries({
+        queryKey: [ADMIN_QUERY_KEYS.ADMIN_BLOOD_REQs],
+      });
+      queryClient.invalidateQueries({
         queryKey: [PATIENT_QUERY_KEYS.PATIENT_BLOOD_REQ],
       });
       queryClient.invalidateQueries({
