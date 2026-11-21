@@ -35,17 +35,14 @@ export default function Header() {
   };
 
   const { data: user, isLoading } = useGetMe();
-  console.log("User from navbar==", user);
   const { mutate: logout } = useLogout();
   const queryClient = useQueryClient();
 
   const role = !!user?.data && user.data.role;
-  console.log("role user ==", role);
 
   const handleLogout = () => {
     logout(undefined, {
       onSuccess: () => {
-        console.log("Logout Successful");
         queryClient.removeQueries({ queryKey: [AUTH_KEYS.CURRENT_USER] });
         toast.add({
           title: "Logout Successful",
@@ -55,7 +52,6 @@ export default function Header() {
         router.push("/");
       },
       onError: (err) => {
-        console.log(err);
         toast.add({
           title: "Logout Failed",
           description: "Please try again",

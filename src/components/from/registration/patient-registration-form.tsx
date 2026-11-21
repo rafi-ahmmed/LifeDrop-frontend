@@ -52,7 +52,7 @@ export function PatientRegisterForm() {
 
     registerPatient(patientData, {
       onSuccess: (res) => {
-        console.log(res);
+       
         if (!res.success) {
           // router.push("/"); TODO: Redirect to OTP page
 
@@ -75,12 +75,10 @@ export function PatientRegisterForm() {
 
         const url = `/register/verify-account?${searchParams.toString()}`;
 
-        console.log("Navigating to:", url);
 
         router.push(url);
       },
       onError: (err) => {
-        console.log(err);
         const message =
           err instanceof FetchError
             ? err.data?.message || err.message

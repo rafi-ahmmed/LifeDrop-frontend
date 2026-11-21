@@ -16,7 +16,6 @@ export default function MatchingDonorsPage() {
   const exactLocation = searchParams.get("exactLocation");
   const requestId = searchParams.get("requestId");
 
-  console.log(requestId);
 
   const filterParams: TDonorMatchingParams = {
     exactDistrict: exactDistrict === "true",

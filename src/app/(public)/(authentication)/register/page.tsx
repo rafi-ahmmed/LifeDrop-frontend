@@ -37,9 +37,9 @@ export default function SignupPage() {
             {/* Shadcn Tabs with TabsContent */}
             <Tabs
               defaultValue="patient"
-              className="w-full px-0 md:px-0 lg:px-5"
+              className=" px-0 md:px-0 lg:px-5"
             >
-              <TabsList className="grid w-full grid-cols-3 h-10 mb-4">
+              <TabsList className="grid w-full grid-cols-2 h-10 mb-4">
                 <TabsTrigger
                   value="patient"
                   className="text-xs flex items-center gap-1.5"
@@ -47,6 +47,7 @@ export default function SignupPage() {
                   <User className="w-3.5 h-3.5" />
                   <span>Patient</span>
                 </TabsTrigger>
+
                 <TabsTrigger
                   value="donor"
                   className="text-xs flex items-center gap-1.5"
@@ -54,13 +55,13 @@ export default function SignupPage() {
                   <Droplet className="w-3.5 h-3.5 text-primary" />
                   <span>Donor</span>
                 </TabsTrigger>
-                <TabsTrigger
+                {/* <TabsTrigger
                   value="hospital"
                   className="text-xs flex items-center gap-1.5"
                 >
                   <Building2 className="w-3.5 h-3.5" />
                   <span>Hospital</span>
-                </TabsTrigger>
+                </TabsTrigger> */}
               </TabsList>
 
               {/* Patient Form Tab */}
@@ -74,10 +75,9 @@ export default function SignupPage() {
               </TabsContent>
 
               {/* Hospital Form Tab */}
-              <TabsContent value="hospital" className="mt-2.5 outline-none">
-                {/* <HospitalRegisterForm /> */}
+              {/* <TabsContent value="hospital" className="mt-2.5 outline-none">
                 <HospitalRegisterForm />
-              </TabsContent>
+              </TabsContent> */}
             </Tabs>
           </div>
         </div>

@@ -17,7 +17,7 @@ interface IProps {
 const RoleGuard = ({ children, role }: IProps) => {
   const { data, isPending, isError } = useGetMe();
   const router = useRouter();
-  console.log(data);
+
 
   const user = data?.data;
 

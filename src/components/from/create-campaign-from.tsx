@@ -54,11 +54,9 @@ export function CreateCampaignForm() {
   });
 
   const onSubmit: SubmitHandler<CreateCampaignPayload> = (data) => {
-    console.log("Campaign Form Payload:", data);
 
     createCampaign(data, {
       onSuccess: (res) => {
-        console.log(res);
         if (!res.success) {
           toast.add({
             title: "Server Failure",
@@ -86,7 +84,6 @@ export function CreateCampaignForm() {
         });
       },
       onError: (err) => {
-        console.log(err);
         const message =
           err instanceof FetchError
             ? err.data?.message || err.message

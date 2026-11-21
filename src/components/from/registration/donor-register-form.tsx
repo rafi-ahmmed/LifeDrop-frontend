@@ -69,7 +69,6 @@ export function DonorRegisterForm() {
 
     registerDonor(donorData, {
       onSuccess: (res) => {
-        console.log(res);
         if (!res.success) {
 
           toast.add({
@@ -94,7 +93,6 @@ export function DonorRegisterForm() {
         router.push(url);
       },
       onError: (err) => {
-        console.log(err);
         const message =
           err instanceof FetchError
             ? err.data?.message || err.message

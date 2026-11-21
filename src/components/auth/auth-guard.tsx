@@ -8,7 +8,7 @@ import { DashboardSkeleton } from "./dashboard-skeleton";
 const AuthGuard = ({ children }: { children: ReactNode }) => {
   const { data, isPending, isError } = useGetMe();
   const router = useRouter();
-  console.log(data);
+
 
   useEffect(() => {
     if (isPending) return;

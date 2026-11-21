@@ -41,7 +41,6 @@ export function ReloadButton({
       onClick();
     }
     if (queryKey) {
-      console.log("click");
       await queryClient.refetchQueries({
         queryKey: queryKey,
         exact,

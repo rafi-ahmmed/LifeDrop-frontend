@@ -52,7 +52,6 @@ const VerifyAccountForm = () => {
 
     verifyEmail(verifyData, {
       onSuccess: (res) => {
-        console.log(res);
         if (!res.success) {
           toast.add({
             title: "Server Failure",
@@ -71,7 +70,6 @@ const VerifyAccountForm = () => {
         router.push("/");
       },
       onError: (err) => {
-        console.log(err);
         const message =
           err instanceof FetchError
             ? err.data?.message || err.message

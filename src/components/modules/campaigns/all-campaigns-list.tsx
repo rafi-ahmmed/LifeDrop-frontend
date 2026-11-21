@@ -13,7 +13,6 @@ const AllCampaignsList = () => {
     ? response.data
     : (response?.data as any)?.campaigns || [];
 
-  console.log(response);
 
   if (isError || !response) {
     return (

@@ -9,7 +9,7 @@ export default function GuestGuard({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   const { data, isLoading, isError } = useGetMe();
-  console.log("login data from guest guard", data);
+
 
   useEffect(() => {
     if (data?.success && data.data) {

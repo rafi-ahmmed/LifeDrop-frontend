@@ -59,7 +59,6 @@ export function LoginForm({
 
     Login(loginData, {
       onSuccess: (res) => {
-        console.log(res);
         router.push("/");
         toast.add({
           title: "Login Successful",
@@ -114,7 +113,6 @@ export function LoginForm({
 
     Login(loginData, {
       onSuccess: (res) => {
-        console.log(res);
         router.push("/");
         toast.add({
           title: "Login Successful",
