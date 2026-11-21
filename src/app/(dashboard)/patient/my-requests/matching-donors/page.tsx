@@ -1,6 +1,8 @@
+"use client";
 import { ArrowLeft, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { DonorFilterSwitches } from "@/components/modules/patient/matching-donors/donor-filter-switches";
 import { MatchingDonorList } from "@/components/modules/patient/matching-donors/matching-donor-list";
@@ -8,23 +10,13 @@ import { MatchingDonorsSkeleton } from "@/components/modules/patient/matching-do
 import { Button } from "@/components/ui/button";
 import type { TDonorMatchingParams } from "@/types";
 
-type MatchingDonorsPageProps = {
-  params: Promise<{ requestId: string }>;
-  searchParams: Promise<{ exactDistrict?: string; exactLocation?: string }>;
-};
+export default function MatchingDonorsPage() {
+  const searchParams = useSearchParams();
+  const exactDistrict = searchParams.get("exactDistrict");
+  const exactLocation = searchParams.get("exactLocation");
+  const requestId = searchParams.get("requestId");
 
-export const metadata: Metadata = {
-  title: "Matching Donors",
-  description:
-    "Browse donors matched to your blood request and filter them by district and location.",
-};
-
-export default async function MatchingDonorsPage({
-  params,
-  searchParams,
-}: MatchingDonorsPageProps) {
-  const { requestId } = await params;
-  const { exactDistrict, exactLocation } = await searchParams;
+  console.log(requestId);
 
   const filterParams: TDonorMatchingParams = {
     exactDistrict: exactDistrict === "true",
@@ -67,7 +59,10 @@ export default async function MatchingDonorsPage({
 
       {/* Donor List with Suspense */}
       <Suspense fallback={<MatchingDonorsSkeleton />}>
-        <MatchingDonorList requestId={requestId} params={filterParams} />
+        <MatchingDonorList
+          requestId={requestId as string}
+          params={filterParams}
+        />
       </Suspense>
     </div>
   );

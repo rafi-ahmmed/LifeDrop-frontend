@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FetchError } from "ofetch";
 import { useState } from "react";
 import { Controller, type SubmitHandler, useForm } from "react-hook-form";
@@ -24,6 +25,7 @@ import { donorRegistrationZodSchema } from "@/validation";
 
 export function DonorRegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   type DonorFormInput = z.input<typeof donorRegistrationZodSchema>;
   type DonorFormOutput = z.output<typeof donorRegistrationZodSchema>;
@@ -68,9 +70,8 @@ export function DonorRegisterForm() {
     registerDonor(donorData, {
       onSuccess: (res) => {
         console.log(res);
-        // router.push("/"); TODO: Redirect to OTP page
-
         if (!res.success) {
+
           toast.add({
             title: "Server Failure",
             description: "Please try again",
@@ -83,6 +84,14 @@ export function DonorRegisterForm() {
           description: "We have sent you an OTP to your email",
           type: "success",
         });
+
+        const searchParams = new URLSearchParams({
+          email: donorData.email,
+        });
+
+        const url = `/register/verify-account?${searchParams.toString()}`;
+        
+        router.push(url);
       },
       onError: (err) => {
         console.log(err);

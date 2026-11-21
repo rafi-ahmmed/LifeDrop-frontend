@@ -11,6 +11,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,7 @@ interface MyRequestCardProps {
 export function MyRequestCard({ request }: MyRequestCardProps) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const router = useRouter();
 
   const currentStatus =
     bloodRequestStatusConfig[
@@ -119,12 +121,13 @@ export function MyRequestCard({ request }: MyRequestCardProps) {
         {/* Matching Donors Action (Shown ONLY when status is APPROVED or MATCHING) */}
         {isMatchingAvailable && (
           <Button
-            nativeButton={false}
-            render={
-              <Link
-                href={`/patient/my-requests/${request.id}/matching-donors`}
-              />
-            }
+            onClick={() => {
+              const searchParams = new URLSearchParams({
+                requestId: request.id,
+              });
+              const url = `/patient/my-requests/matching-donors?${searchParams.toString()}`;
+              router.push(url);
+            }}
             className="w-full h-9 rounded-xl bg-gradient-to-r from-rose-500 to-primary hover:opacity-95 text-white font-semibold text-xs shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
           >
             <Users className="w-3.5 h-3.5" />

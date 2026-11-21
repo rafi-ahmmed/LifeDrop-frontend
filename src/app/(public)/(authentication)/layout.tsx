@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import GuestGuard from "@/components/auth/guest-guard";
 
 export const metadata: Metadata = {
   title: {
@@ -11,5 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function Layout({ children }: { children: ReactNode }) {
-  return children;
+  return <GuestGuard>{children}</GuestGuard>;
 }
